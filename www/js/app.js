@@ -24,7 +24,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $stateProvider
 
     .state('citationDuJour', {
-      url: '/citationDuJour',
+      url: '/citationDuJour/:citationId',
       templateUrl: 'templates/citationDuJour.html',
       controller : 'CitationDuJourController'
     })
@@ -33,6 +33,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     
     
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/citationDuJour');
+  $urlRouterProvider.otherwise('/citationDuJour/');
 
 });
