@@ -1,23 +1,23 @@
 angular.module('starter.controllers', [])
 
-.controller('CitationDuJourController', function($scope, $stateParams, Citations, $ionicNavBarDelegate, $location) {
+.controller('CitationDuJourController', function($scope, $ionicSlideBoxDelegate, Citations) {
 
-	var citationId = $stateParams.citationId;
-	var citation;
-	if ( citationId ) {
-		citation = Citations.get(citationId);
-	} else {
-		citation = Citations.next();
-	}
-	$scope.citation = citation;
+	$scope.citations = [];
+	$scope.citations.push(Citations.get(0));
+	$scope.citations.push(Citations.get(1));
+	$scope.citations.push(Citations.get(2));
+	$ionicSlideBoxDelegate.update();
 	
-	// Actions
-	$scope.goBack = function() {
-		$location.path('/citationDuJour/' + Citations.previous().id);
-	  };
-	  
-	$scope.goNextCitationDuJour = function() {
-		$location.path('/citationDuJour/' + Citations.next().id);
+	$scope.next = function() {
+		$ionicSlideBoxDelegate.next();
 	};
+	$scope.previous = function() {
+		$ionicSlideBoxDelegate.previous();
+	};
+		  
+   $scope.onSlideChanged = function(index) {
+	   console.log("on slide changed !");
+	   $scope.slideIndex = index;
+   };
 })
 ;
