@@ -16,12 +16,32 @@ angular.module('starter.services', [])
   ];
 
   return {
+	  
     all: function() {
       return citations;
     },
-    next: function(){
+    
+    previous: function() {
+    	var historyIds = localStorageService.get('historyIds');
+    	
+    	if (historyIds.length == 1){
+    		return citations[historyIds[0]];
+    	}
+
+    	// Remove last element
+    	historyIds.pop();
+    	// Get previous citation
+    	
+    	var lastCitationId = historyIds[historyIds.length-1];
+    	console.debug(lastCitationId);
+    	localStorageService.set('historyIds', historyIds);
+       	return citations[lastCitationId];
+    },
+    
+    next: function() {
     	var historyIds = localStorageService.get('historyIds');
 		
+    	// Compute citations
     	var citationsRestantes;
     	if (historyIds){
         	citationsRestantes = $filter('excludeHistory')(citations, historyIds);
@@ -40,6 +60,7 @@ angular.module('starter.services', [])
 	
     	// Update history
     	historyIds.push(citation.id);
+    	console.debug("historyIds size = " + historyIds.length);
     	for(var index in historyIds) {
     		console.log("NEW history -> "+historyIds[index]);
     	}

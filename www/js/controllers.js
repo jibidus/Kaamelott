@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
 	
 	// Actions
 	$scope.goBack = function() {
-	    $ionicNavBarDelegate.back();
+		$location.path('/citationDuJour/' + Citations.previous().id);
 	  };
 	  
 	$scope.goNextCitationDuJour = function() {
