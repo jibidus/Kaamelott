@@ -33,3 +33,19 @@ body {
   list-style: decimal;
   margin: 10px 0px;
 }
+
+/*  --------------------- Icon rating --------------------- */
+.icon-rate {
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-right: 20px;
+}
+
+.icon-rate.selected {
+	background-image: url('/img/star-selected.gif');
+}
+
+.icon-rate.not-selected {
+	background-image: url('/img/star-not-selected.gif');
+}

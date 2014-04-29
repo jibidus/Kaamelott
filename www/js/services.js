@@ -8,11 +8,11 @@ angular.module('kaamelott.services', [])
 
   // Some fake testing data
   var allSentences = [
-    { id: 0, texte: 'Scruff McGruff', personnage: 'Arthur', livre: 1 },
-    { id: 1, texte: 'G.I. Joe', personnage: 'Leodagan', livre: 2 },
-    { id: 2, texte: 'Miss Frizzle', personnage: 'Caradoc', livre: 3 },
-    { id: 3, texte: 'Ash Ketchum', personnage: 'Perceval', livre: 4 },
-    { id: 4, texte: 'Oulala', personnage: 'Merlin', livre: 3 }
+    { id: 0, text: 'Scruff McGruff', character: 'Arthur', book: 1, rate: 2 },
+    { id: 1, text: 'G.I. Joe', character: 'Leodagan', book: 2, rate: 2 },
+    { id: 2, text: 'Miss Frizzle', character: 'Caradoc', book: 3, rate: 1 },
+    { id: 3, text: 'Ash Ketchum', character: 'Perceval', book: 4, rate: 3 },
+    { id: 4, text: 'Oulala', character: 'Merlin', book: 3, rate: 4 }
   ];
 
   shuffle();

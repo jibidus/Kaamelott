@@ -25,6 +25,14 @@ angular.module('kaamelott.controllers', [])
 	   }
    };
    
+   $scope.updateRate = function() {
+	   console.debug("new rate: ");
+   };
+   
+   $scope.maxRate = function() {
+	   return [1, 2, 3, 4 ];
+   };
+
    function appendOneSlide(){
 	   if ($scope.sentences.length >= nbSentences) {
 		   Sentences.shuffle();

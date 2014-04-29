@@ -3,7 +3,7 @@
     	<ion-nav-buttons side="left">
           <button class="button button-positive button-clear no-animation"
                   ng-click="previous()" ng-if="slideIndex > 0">
-            Précédente citation
+            Pr&#233;c&#233;dente citation
           </button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
@@ -14,16 +14,25 @@
         </ion-nav-buttons>
         
         
-            <ion-slide-box show-pager="false" on-slide-changed="onSlideChanged(index)">
-              <ion-slide ng-repeat="sentence in sentences">
-              	<ion-content>
+		<ion-slide-box show-pager="false" on-slide-changed="onSlideChanged(index)">
+			<ion-slide ng-repeat="sentence in sentences">
+				<ion-content>
               	
-                  <h1>{{sentence.livre}}</h1>
-                  <p>{{sentence.texte}}</p>
-                  <p>{{sentence.personnage}}</p>
+                  <h1>{{sentence.book}}</h1>
+                  <p>{{sentence.text}}</p>
+                  <p>{{sentence.character}}</p>
+                  
+                  <div>
+                  	<a class="button button-icon icon icon-rate selected" 
+                  		ng-repeat="rate in maxRate().slice(0,sentence.rate)" 
+                  		ng-click="updateRate(rate)"></a>
+                  	<a class="button button-icon icon icon-rate not-selected" 
+                  		ng-repeat="rate in maxRate().slice(sentence.rate)" 
+                  		ng-click="updateRate(rate)"></a>
+                  </div>
                   
                 </ion-content>
-              </ion-slide>
-            </ion-slide-box>
+			</ion-slide>
+		</ion-slide-box>
 
 </ion-view>
