@@ -1,13 +1,13 @@
-angular.module('starter.services', [])
+angular.module('kaamelott.services', [])
 
 /**
  * A simple example service that returns some data.
  */
-.factory('Citations', function($filter) {
+.factory('Sentences', function($filter) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
-  var citations = [
+  var allSentences = [
     { id: 0, texte: 'Scruff McGruff', personnage: 'Arthur', livre: 1 },
     { id: 1, texte: 'G.I. Joe', personnage: 'Leodagan', livre: 2 },
     { id: 2, texte: 'Miss Frizzle', personnage: 'Caradoc', livre: 3 },
@@ -15,14 +15,32 @@ angular.module('starter.services', [])
     { id: 4, texte: 'Oulala', personnage: 'Merlin', livre: 3 }
   ];
 
+  shuffle();
   
   return {
 	  
     all: function() {
-      return citations;
+      return allSentences;
     },
   	get: function(index) {
-  		return citations[index];
+  		return allSentences[index];
+  	},
+  	size: function() {
+  		return allSentences.length;
+  	},
+  	shuffle: function() {
+  		shuffle();
   	}
   };
+  
+  function shuffle() {
+	  allSentences.sort( function (a,b) { 
+		  if (Math.random() * 2 - 1 > 0) {
+			  return 1;
+		  } else {
+			  return -1;
+		  }
+	  }); 
+  }
+  
 });

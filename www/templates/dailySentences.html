@@ -14,13 +14,13 @@
         </ion-nav-buttons>
         
         
-            <ion-slide-box show-pager="true" on-slide-changed="onSlideChanged(index)">
-              <ion-slide ng-repeat="citation in citations">
+            <ion-slide-box show-pager="false" on-slide-changed="onSlideChanged(index)">
+              <ion-slide ng-repeat="sentence in sentences">
               	<ion-content>
               	
-                  <h1>{{citation.livre}}</h1>
-                  <p>{{citation.texte}}</p>
-                  <p>{{citation.personnage}}</p>
+                  <h1>{{sentence.livre}}</h1>
+                  <p>{{sentence.texte}}</p>
+                  <p>{{sentence.personnage}}</p>
                   
                 </ion-content>
               </ion-slide>

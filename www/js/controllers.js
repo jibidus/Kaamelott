@@ -1,11 +1,13 @@
-angular.module('starter.controllers', [])
+angular.module('kaamelott.controllers', [])
 
-.controller('CitationDuJourController', function($scope, $ionicSlideBoxDelegate, Citations) {
+.controller('DailySentencesController', function($scope, $ionicSlideBoxDelegate, Sentences) {
 
-	$scope.citations = [];
-	$scope.citations.push(Citations.get(0));
-	$scope.citations.push(Citations.get(1));
-	$scope.citations.push(Citations.get(2));
+	var nbSentences = Sentences.size();
+	var currentSentenceIndex = 0;
+	
+	$scope.sentences = [];
+	$scope.sentences.push(Sentences.get(currentSentenceIndex++));
+	$scope.sentences.push(Sentences.get(currentSentenceIndex++));
 	$ionicSlideBoxDelegate.update();
 	
 	$scope.next = function() {
@@ -15,9 +17,23 @@ angular.module('starter.controllers', [])
 		$ionicSlideBoxDelegate.previous();
 	};
 		  
-   $scope.onSlideChanged = function(index) {
-	   console.log("on slide changed !");
-	   $scope.slideIndex = index;
+   $scope.onSlideChanged = function(newSlideIndex) {
+	   console.log("Silde index updated to " + newSlideIndex);
+	   $scope.slideIndex = newSlideIndex;
+	   if ($scope.sentences.length <= newSlideIndex + 1){
+		   appendOneSlide();
+	   }
    };
-})
-;
+   
+   function appendOneSlide(){
+	   if ($scope.sentences.length >= nbSentences) {
+		   Sentences.shuffle();
+		   currentSentenceIndex = -1;
+		   // TODO will raise duplicate when inserting into sentences
+	   }
+	   $scope.sentences.push(Sentences.get(currentSentenceIndex++));
+	   $ionicSlideBoxDelegate.update();
+	   console.log("1 sentence appened");
+   }
+   
+});

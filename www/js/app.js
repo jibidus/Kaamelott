@@ -1,11 +1,6 @@
-// Ionic Starter App
+// Kaamelott App
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'LocalStorageModule'])
+angular.module('kaamelott', ['ionic', 'kaamelott.controllers', 'kaamelott.services', 'LocalStorageModule'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -23,13 +18,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-    .state('citationDuJour', {
-      url: '/citationDuJour',
-      templateUrl: 'templates/citationDuJour.html',
-      controller : 'CitationDuJourController'
+    .state('dailySentences', {
+      url: '/dailySentences',
+      templateUrl: 'templates/dailySentences.html',
+      controller : 'DailySentencesController'
     });
     
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/citationDuJour');
+  $urlRouterProvider.otherwise('/dailySentences');
 
 });
