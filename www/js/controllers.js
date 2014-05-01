@@ -33,7 +33,7 @@ angular.module('kaamelott.controllers', [])
 	   return [1, 2, 3, 4 ];
    };
 
-   function appendOneSlide(){
+   function appendOneSlide() {
 	   if ($scope.sentences.length >= nbSentences) {
 		   Sentences.shuffle();
 		   currentSentenceIndex = -1;
@@ -42,6 +42,46 @@ angular.module('kaamelott.controllers', [])
 	   $scope.sentences.push(Sentences.get(currentSentenceIndex++));
 	   $ionicSlideBoxDelegate.update();
 	   console.log("1 sentence appened");
-   }
+   };
    
-});
+})
+
+.controller('QuizController', function($scope, Quiz, Characters, Books) {
+
+	$scope.characters = Characters.all();
+	$scope.books = Books.all();
+	
+	console.debug('controller called !!!');
+
+	var sentences = Quiz.build();
+	$scope.nbSentences = sentences.length;
+	$scope.score = 0;
+	$scope.currentSentenceNumber = 0;
+	nextSentence();
+
+	$scope.validate = function() {
+		console.debug($scope.choosedCharacter);
+		console.debug($scope.choosedBook);
+		$scope.score += Quiz.computeScore($scope.sentence, $scope.choosedCharacter, $scope.choosedBook);
+		nextSentence();
+	};
+	
+
+	function nextSentence() {
+		if ($scope.currentSentenceNumber >= sentences.length) {
+			window.location = '#/quizResult/' + $scope.score;
+		} else {
+			$scope.currentSentenceNumber++;
+			$scope.sentence = sentences[$scope.currentSentenceNumber-1];
+			delete $scope.choosedCharacter;
+			delete $scope.choosedBook;
+		}
+	}
+	
+})
+
+.controller('QuizResultController', function($scope, $stateParams) {
+	$scope.score = $stateParams.score;
+})
+
+;

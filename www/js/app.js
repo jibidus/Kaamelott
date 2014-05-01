@@ -22,38 +22,22 @@ angular.module('kaamelott', ['ionic', 'kaamelott.controllers', 'kaamelott.servic
       url: '/dailySentences',
       templateUrl: 'templates/dailySentences.html',
       controller : 'DailySentencesController'
-    });
+    })
+    .state('quiz', {
+      url: '/quiz',
+      templateUrl: 'templates/quiz.html',
+      controller : 'QuizController'
+    })
+	.state('quizResult', {
+      url: '/quizResult/:score',
+      templateUrl: 'templates/quizResult.html',
+      controller : 'QuizResultController'
+    })
+    ;
     
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/dailySentences');
 
 })
 
-/*
-.directive('ngRepeatTimes', function ($compile) {
-    return {
-    	restrict: 'E',
-    	replace: true,
-    	terminal: true, // Mandatory to increase compiling priority
-        priority: 1000, // Mandatory to increase compiling priority
-        scope: { times: '=' },
-        compile: function (element, attrs, scope) {
-            var times = scope.times || 0;
-            var index = 0;
-            var content = element.html();
-            element.html("");
-            while (index < times) {
-            	element.append(content);
-            	index++;
-            }
-            return {
-                pre: function preLink(scope, iElement, iAttrs, controller) {  },
-                post: function postLink(scope, iElement, iAttrs, controller) {  
-                  $compile(iElement)(scope);
-                }
-            };
-        }
-    };
-})
-*/
 ;

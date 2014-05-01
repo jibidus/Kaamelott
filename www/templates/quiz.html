@@ -1,0 +1,30 @@
+<ion-view>
+	<ion-content>
+
+		<p>Score : {{score}}</p>
+		<p>{{sentence.text}}</p>
+                  
+		<div class="list">
+		  <label class="item item-input item-select">
+		    <div class="input-label">Personnage</div>
+		    <select ng-model="choosedCharacter" ng-options="character as character.name for character in characters"></select>
+		  </label>
+		  <label class="item item-input item-select">
+		    <div class="input-label">Livre</div>
+		    <select ng-model="choosedBook" ng-options="book for book in books"></select>
+		  </label>
+		</div>
+		
+		<p>Personnage sélectionné : {{choosedCharacter.name}}</p>
+		<p>Livre : {{choosedBook}}  </p>
+		
+		<p>Question {{currentSentenceNumber}}/{{nbSentences}}</p>
+		
+    <div class="bar bar-footer">
+  		<a class="button" href="#/dailySentences">Abandonner</a>
+    	<!-- Update color when a character and a book is selected -->
+  		<a class="button" ng-click="validate()">Valider</a>
+	</div>
+
+	</ion-content>
+</ion-view>

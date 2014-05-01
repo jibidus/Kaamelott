@@ -8,14 +8,14 @@ angular.module('kaamelott.services', [])
 
   // Some fake testing data
   var allSentences = [
-    { id: 0, text: 'Scruff McGruff', character: 'Arthur', book: 1, rate: 2 },
-    { id: 1, text: 'G.I. Joe', character: 'Leodagan', book: 2, rate: 2 },
-    { id: 2, text: 'Miss Frizzle', character: 'Caradoc', book: 3, rate: 1 },
-    { id: 3, text: 'Ash Ketchum', character: 'Perceval', book: 4, rate: 3 },
-    { id: 4, text: 'Oulala', character: 'Merlin', book: 3, rate: 4 }
+    { id: 0, text: 'Scruff McGruff (Arthur)', character: 'Arthur', book: 1, rate: 2 },
+    { id: 1, text: 'G.I. Joe (Leodagan)', character: 'Leodagan', book: 2, rate: 2 },
+    { id: 2, text: 'Miss Frizzle (Caradoc)', character: 'Caradoc', book: 3, rate: 1 },
+    { id: 3, text: 'Ash Ketchum (Perceval)', character: 'Perceval', book: 4, rate: 3 },
+    { id: 4, text: 'Oulala (Merlin)', character: 'Merlin', book: 3, rate: 4 }
   ];
 
-  shuffle();
+  shuffle(allSentences);
   
   return {
 	  
@@ -29,18 +29,72 @@ angular.module('kaamelott.services', [])
   		return allSentences.length;
   	},
   	shuffle: function() {
-  		shuffle();
+  		shuffle(allSentences);
   	}
   };
   
-  function shuffle() {
-	  allSentences.sort( function (a,b) { 
-		  if (Math.random() * 2 - 1 > 0) {
-			  return 1;
-		  } else {
-			  return -1;
-		  }
-	  }); 
-  }
+})
+
+.factory('Characters', function() {
+
+	var allCharacters = [ 
+	{ id: 'arthur', name: 'Arthur' }, 
+	{ id: 'leodagan', name: 'Leodagan' }, 
+	{ id: 'caradoc', name: 'Caradoc' }, 
+	{ id: 'perceval', name: 'Perceval' }, 
+	{ id: 'merlin', name: 'Merlin' }
+	];
+
+  return {
+	  
+    all: function() {
+      return allCharacters;
+    }
+  };
   
-});
+})
+
+.factory('Books', function() {
+
+	var allBooks = [ 'I', 'II', 'III', 'IV', 'V', 'VI' ];
+
+	return {
+		all: function() {
+			return allBooks;
+		}
+	};
+  
+})
+
+.factory('Quiz', function(Sentences) {
+
+	var nbSentences = 20;
+
+	return {
+	  	build: function() {
+	  		sentences = angular.copy(Sentences.all());
+	  		shuffle(sentences);
+	  		return sentences.slice(0, nbSentences);
+	  	},
+	    saveScore: function() {
+	    	// TODO add remote service
+	    },
+	    getBestScore: function() {
+	    	// TODO add remote service
+	      return 10;
+	    },
+	    computeScore: function(sentence, character, book) {
+	    	var score = 0;
+	    	if (character && sentence.character === character.name){
+	    		score += 5;
+	    	}
+	    	if (book && sentence.book === book){
+	    		score += 10;
+	    	}
+	    	return score;
+	    }
+	  };
+	  
+})
+
+;

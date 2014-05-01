@@ -1,5 +1,11 @@
 <ion-view>
 
+    <ion-nav-bar class="nav-title-slide-ios7 bar-light">
+        <ion-nav-back-button class="button-icon ion-arrow-left-c">
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    
+
     	<ion-nav-buttons side="left">
           <button class="button button-positive button-clear no-animation"
                   ng-click="previous()" ng-if="slideIndex > 0">
@@ -30,9 +36,13 @@
                   		ng-repeat="rate in maxRate().slice(sentence.rate)" 
                   		ng-click="updateRate(rate)"></a>
                   </div>
-                  
+
                 </ion-content>
 			</ion-slide>
 		</ion-slide-box>
+
+    <div class="bar bar-footer">
+  		<a class="button" href="#/quiz">Quiz</a>
+	</div>
 
 </ion-view>
