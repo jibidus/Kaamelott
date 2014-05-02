@@ -84,6 +84,10 @@ angular.module('kaamelott.services', [])
 	      return 10;
 	    },
 	    computeScore: function(sentence, character, book) {
+	    	console.debug('compute score !!');
+	    	console.debug(sentence);
+	    	console.debug(character);
+	    	console.debug(book);
 	    	var score = 0;
 	    	if (character && sentence.character === character.name){
 	    		score += 5;

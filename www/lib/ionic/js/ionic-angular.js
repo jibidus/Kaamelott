@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.3
+ * Ionic, v1.0.0-beta.3-nightly-1950
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -275,6 +275,68 @@ angular.element.prototype.removeClass = function(cssClasses) {
   }
   return this;
 };
+
+
+/**
+ * @ngdoc service
+ * @name $ionicAnimation
+ * @module ionic
+ * @description
+ *
+ * A powerful animation and transition system for Ionic apps.
+ *
+ * @usage
+ *
+ * ```js
+ * angular.module('mySuperApp', ['ionic'])
+ * .controller(function($scope, $ionicAnimation) {
+ *    var anim = $ionicAnimate({
+ *     // A unique, reusable name
+ *     name: 'popIn',
+ *     
+ *     // The duration of an auto playthrough
+ *     duration: 0.5,
+ *     
+ *     // How long to wait before running the animation
+ *     delay: 0,
+ *     
+ *     // Whether to reverse after doing one run through
+ *     autoReverse: false,
+ *     
+ *     // How many times to repeat? -1 or null for infinite
+ *     repeat: -1,
+ *     
+ *     // Timing curve to use (same as CSS timing functions), or a function of time "t" to handle it yourself
+ *     curve: 'ease-in-out'
+ *     
+ *     onStart: function() {
+ *       // Callback on start
+ *     },
+ *     onEnd: function() {
+ *       // Callback on end
+ *     },
+ *     step: function(amt) {
+ *       
+ *     }
+ *   })
+ * });
+ * ```
+ *
+ */
+IonicModule
+.provider('$ionicAnimation', function() {
+  var useSlowAnimations = false;
+  this.setSlowAnimations = function(isSlow) {
+    useSlowAnimations = isSlow;
+  };
+
+  this.$get = [function() {
+    return function(opts) {
+      opts.useSlowAnimations = useSlowAnimations;
+      return ionic.Animation.create(opts);
+    }
+  }]
+});
 
 /**
  * @ngdoc service
@@ -1291,7 +1353,14 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
         self.el.classList.add('active');
       }, 20);
 
-      return $timeout(angular.noop, 400);
+      return $timeout(function() {
+        //After animating in, allow hide on backdrop click
+        self.$el.on('click', function(e) {
+          if (e.target === self.el) {
+            self.hide();
+          }
+        });
+      }, 400);
     },
 
     /**
@@ -1312,6 +1381,7 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
                .removeClass('ng-enter ng-enter-active active');
       }, 20);
 
+      self.$el.off('click');
       self._isShown = false;
       self.scope.$parent && self.scope.$parent.$broadcast('modal.hidden', self);
       self._deregisterBackButton && self._deregisterBackButton();
@@ -1336,7 +1406,7 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
 
       return self.hide().then(function() {
         self.scope.$destroy();
-        angular.element(self.el).remove();
+        self.$el.remove();
       });
     },
 
@@ -1366,6 +1436,7 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
     // Compile the template
     var element = $compile('<ion-modal>' + templateString + '</ion-modal>')(scope);
 
+    options.$el = element;
     options.el = element[0];
     options.modalEl = options.el.querySelector('.modal');
     var modal = new ModalView(options);
@@ -5143,7 +5214,7 @@ IonicModule
     replace: true,
     template: '<div class="modal-backdrop">' +
                 '<div class="modal-wrapper" ng-transclude></div>' +
-              '</div>'
+                '</div>'
   };
 }]);
 
@@ -5212,7 +5283,14 @@ IonicModule
 IonicModule
 .directive('ionNavBackButton', [
   '$animate',
-function($animate) {
+  '$rootScope',
+function($animate, $rootScope) {
+  var backIsShown = false;
+  //If the current viewstate does not allow a back button,
+  //always hide it.
+  $rootScope.$on('$viewHistory.historyChange', function(e, data) {
+    backIsShown = !!data.showBack;
+  });
   return {
     restrict: 'E',
     require: '^ionNavBar',
@@ -5228,19 +5306,11 @@ function($animate) {
           });
         }
 
-        //If the current viewstate does not allow a back button,
-        //always hide it.
-        var deregisterListener = $scope.$parent.$on(
-          '$viewHistory.historyChange',
-          function(e, data) {
-            $scope.hasBackButton = !!data.showBack;
-          }
-        );
-        $scope.$on('$destroy', deregisterListener);
-
         //Make sure both that a backButton is allowed in the first place,
         //and that it is shown by the current view.
-        $scope.$watch('!!(backButtonShown && hasBackButton)', ionic.animationFrameThrottle(function(show) {
+        $scope.$watch(function() {
+          return !!(backIsShown && $scope.backButtonShown);
+        }, ionic.animationFrameThrottle(function(show) {
           if (show) $animate.removeClass($element, 'ng-hide');
           else $animate.addClass($element, 'ng-hide');
         }));
@@ -5286,6 +5356,33 @@ function($animate) {
  * with {@link ionic.service:$ionicNavBarDelegate}.
  * @param align-title {string=} Where to align the title of the navbar.
  * Available: 'left', 'right', 'center'. Defaults to 'center'.
+ *
+ * </table><br/>
+ *
+ * ### Alternative Usage
+ *
+ * Alternatively, you may put ion-nav-bar inside of each individual view's ion-view element.
+ * This will allow you to have the whole navbar, not just its contents, transition every view change.
+ *
+ * This is similar to using a header bar inside your ion-view, except it will has all the power of a navbar.
+ *
+ * If you do this, simply put nav buttons inside the navbar itself; do not use `<ion-nav-buttons>`.
+ *
+ *
+ * ```html
+ * <ion-nav-bar class="bar-positive">
+ *   <ion-nav-back-button>
+ *     Back
+ *   </ion-nav-back-button>
+ *   <div class="buttons right-buttons">
+ *     <button class="button">
+ *       Right Button
+ *     </button>
+ *   </div>
+ * </ion-nav-bar>
+ * <ion-view title="myTitle">
+ * </ion-view>
+ * ```
  */
 IonicModule
 .directive('ionNavBar', [
@@ -5428,13 +5525,16 @@ IonicModule
  * @restrict AC
  *
  * @description
- * Disables any transition animations between views, along with removing the back
- * button which would normally show on the next view. This directive is useful for
- * links within a sideMenu.
+ * nav-clear is an attribute directive which should be used with an element that changes
+ * the view on click, for example an `<a href>` or a `<button ui-sref>`.
+ *
+ * nav-clear will cause the given element, when clicked, to disable the next view transition.
+ * This directive is useful, for example, for links within a sideMenu.
  *
  * @usage
- * Below is an example of a link within a side menu. Tapping this link would disable
- * any animations which would normally occur between views.
+ * Below is a link in a side menu, with the nav-clear directive added to it.
+ * Tapping this link will disable any animations that would normally occur
+ * between views.
  *
  * ```html
  * <a nav-clear menu-close href="#/home" class="item">Home</a>
@@ -6271,7 +6371,6 @@ IonicModule
  * @param {number=} slide-interval How many milliseconds to wait to change slides (if does-continue is true). Defaults to 4000.
  * @param {boolean=} show-pager Whether a pager should be shown for this slide box.
  * @param {expression=} pager-click Expression to call when a pager is clicked (if show-pager is true). Is passed the 'index' variable.
- * @param {boolean=} disable-scroll Whether to disallow scrolling/dragging of the slide-box content.
  * @param {expression=} on-slide-changed Expression called whenever the slide is changed.  Is passed an 'index' variable.
  * @param {expression=} active-slide Model to bind the current slide to.
  */
@@ -6303,7 +6402,6 @@ function($timeout, $compile, $ionicSlideBoxDelegate) {
       var slider = new ionic.views.Slider({
         el: $element[0],
         auto: slideInterval,
-        disableScroll: ($scope.$eval($scope.disableScroll) === true) || false,
         continuous: continuous,
         startSlide: $scope.activeSlide,
         slidesChanged: function() {
@@ -6321,6 +6419,8 @@ function($timeout, $compile, $ionicSlideBoxDelegate) {
           $timeout(function() {});
         }
       });
+
+      slider.enableSlide($scope.$eval($attrs.disableScroll) !== true);
 
       $scope.$watch('activeSlide', function(nv) {
         if(angular.isDefined(nv)){
@@ -6714,6 +6814,15 @@ IonicModule
  *
  * The toggle behaves like any [AngularJS checkbox](http://docs.angularjs.org/api/ng/input/input[checkbox]) otherwise.
  *
+ * @param toggle-class {string=} Sets the CSS class on the inner `label.toggle` element created by the directive.
+ *
+ * @usage
+ * Below is an example of a toggle directive which is wired up to the `airplaneMode` model
+ * and has the `toggle-calm` CSS class assigned to the inner element.
+ *
+ * ```html
+ * <ion-toggle ng-model="airplaneMode" toggle-class="toggle-calm">Airplane Mode</ion-toggle>
+ * ```
  */
 IonicModule
 .directive('ionToggle', [
@@ -6749,6 +6858,9 @@ function($ionicGesture, $timeout) {
       if(attr.ngChecked) input.attr('ng-checked', 'ngChecked');
       if(attr.ngTrueValue) input.attr('ng-true-value', attr.ngTrueValue);
       if(attr.ngFalseValue) input.attr('ng-false-value', attr.ngFalseValue);
+      if(attr.toggleClass) {
+        element[0].getElementsByTagName('label')[0].classList.add(attr.toggleClass);
+      }
 
       return function($scope, $element, $attr) {
          var el, checkbox, track, handle;
@@ -6810,9 +6922,9 @@ function($ionicGesture, $timeout) {
  * ```
  *
  * @param {string=} title The title to display on the parent {@link ionic.directive:ionNavBar}.
- * @param {boolean=} hideBackButton Whether to hide the back button on the parent
+ * @param {boolean=} hide-back-button Whether to hide the back button on the parent
  * {@link ionic.directive:ionNavBar} by default.
- * @param {boolean=} hideNavBar Whether to hide the parent
+ * @param {boolean=} hide-nav-bar Whether to hide the parent
  * {@link ionic.directive:ionNavBar} by default.
  */
 IonicModule

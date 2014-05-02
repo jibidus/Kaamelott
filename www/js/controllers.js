@@ -51,18 +51,14 @@ angular.module('kaamelott.controllers', [])
 	$scope.characters = Characters.all();
 	$scope.books = Books.all();
 	
-	console.debug('controller called !!!');
-
 	var sentences = Quiz.build();
 	$scope.nbSentences = sentences.length;
 	$scope.score = 0;
 	$scope.currentSentenceNumber = 0;
 	nextSentence();
 
-	$scope.validate = function() {
-		console.debug($scope.choosedCharacter);
-		console.debug($scope.choosedBook);
-		$scope.score += Quiz.computeScore($scope.sentence, $scope.choosedCharacter, $scope.choosedBook);
+	$scope.validate = function(choosedCharacter, choosedBook) {
+		$scope.score += Quiz.computeScore($scope.sentence, choosedCharacter, choosedBook);
 		nextSentence();
 	};
 	
