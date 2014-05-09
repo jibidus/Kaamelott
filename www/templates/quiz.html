@@ -15,13 +15,10 @@
 		  </label>
 		</div>
 		
-		<p>Personnage sélectionné : {{choosedCharacter.name}}</p>
-		<p>Livre : {{choosedBook}}  </p>
-		
 		<p>Question {{currentSentenceNumber}}/{{nbSentences}}</p>
 		
     <div class="bar bar-footer">
-  		<a class="button" href="#/dailySentences">Abandonner</a>
+  		<a class="button" href="#/dailySentences">Quitter le quiz</a>
     	<!-- Update color when a character and a book is selected -->
   		<a class="button" ng-click="validate(choosedCharacter, choosedBook)">Valider</a>
 	</div>

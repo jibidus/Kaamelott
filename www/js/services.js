@@ -49,6 +49,9 @@ angular.module('kaamelott.services', [])
 	  
     all: function() {
       return allCharacters;
+    },
+    empty: function() {
+    	return {id: 'empty', name: 'empty'};
     }
   };
   

@@ -69,7 +69,8 @@ angular.module('kaamelott.controllers', [])
 		} else {
 			$scope.currentSentenceNumber++;
 			$scope.sentence = sentences[$scope.currentSentenceNumber-1];
-			delete $scope.choosedCharacter;
+			console.log("erase variables: DOES NOT work");
+			$scope.choosedCharacter = {id: 'empty', name: 'empty'};
 			delete $scope.choosedBook;
 		}
 	}
