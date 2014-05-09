@@ -1,6 +1,6 @@
 angular.module('kaamelott.controllers', [])
 
-.controller('DailySentencesController', function($scope, $ionicSlideBoxDelegate, Sentences) {
+.controller('DailySentencesController', function($scope, $ionicSlideBoxDelegate, Sentences, Books) {
 
 	var nbSentences = Sentences.size();
 	var currentSentenceIndex = 0;
@@ -31,6 +31,11 @@ angular.module('kaamelott.controllers', [])
    
    $scope.maxRate = function() {
 	   return [1, 2, 3, 4 ];
+   };
+   
+   $scope.getLabelOfBook = function(index) {
+	   console.debug("getBook() with index "+index);
+	   return Books.get(index);
    };
 
    function appendOneSlide() {

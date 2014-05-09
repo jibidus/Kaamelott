@@ -1,11 +1,11 @@
 <ion-view>
-
+	 
+		<!-- 
     <ion-nav-bar class="nav-title-slide-ios7 bar-light">
         <ion-nav-back-button class="button-icon ion-arrow-left-c">
         </ion-nav-back-button>
     </ion-nav-bar>
     
-		<!-- 
     	<ion-nav-buttons side="left">
           <button class="button button-positive button-clear no-animation"
                   ng-click="previous()" ng-if="slideIndex > 0">
@@ -22,20 +22,25 @@
         
 		<ion-slide-box show-pager="false" on-slide-changed="onSlideChanged(index)">
 			<ion-slide ng-repeat="sentence in sentences">
-				<ion-content>
+				<ion-content id="dailySentencesView">
               	
-                  <h1>{{sentence.book}}</h1>
+              	<div id="dailySentence-container">
+              	<div id="dailySentence-bg"></div>
+              	<div id="dailySentence">
+                  <h1>{{sentence.character}}</h1>
                   <p>{{sentence.text}}</p>
-                  <p>{{sentence.character}}</p>
+                  <p>Livre {{getLabelOfBook(sentence.book)}}, Žpisode "{{sentence.episode}}"</p>
+				</div>
+				</div>
                   
-                  <div>
+				<div>
                   	<a class="button button-icon icon icon-rate selected" 
                   		ng-repeat="rate in maxRate().slice(0,sentence.rate)" 
                   		ng-click="updateRate(rate)"></a>
                   	<a class="button button-icon icon icon-rate not-selected" 
                   		ng-repeat="rate in maxRate().slice(sentence.rate)" 
                   		ng-click="updateRate(rate)"></a>
-                  </div>
+				</div>
 
                 </ion-content>
 			</ion-slide>
@@ -44,5 +49,5 @@
     <div class="bar bar-footer">
   		<a class="button" href="#/quiz">Quiz</a>
 	</div>
-
+	
 </ion-view>

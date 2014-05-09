@@ -8,11 +8,11 @@ angular.module('kaamelott.services', [])
 
   // Some fake testing data
   var allSentences = [
-    { id: 0, text: 'Scruff McGruff (Arthur)', character: 'Arthur', book: 1, rate: 2 },
-    { id: 1, text: 'G.I. Joe (Leodagan)', character: 'Leodagan', book: 2, rate: 2 },
-    { id: 2, text: 'Miss Frizzle (Caradoc)', character: 'Caradoc', book: 3, rate: 1 },
-    { id: 3, text: 'Ash Ketchum (Perceval)', character: 'Perceval', book: 4, rate: 3 },
-    { id: 4, text: 'Oulala (Merlin)', character: 'Merlin', book: 3, rate: 4 }
+    { id: 0, text: 'Scruff McGruff (Arthur)', character: 'Arthur', episode: 'Episode 1', book: 1, rate: 2 },
+    { id: 1, text: 'G.I. Joe (Leodagan)', character: 'Leodagan', episode: 'Episode 2', book: 2, rate: 2 },
+    { id: 2, text: 'Miss Frizzle (Caradoc)', character: 'Caradoc', episode: 'Episode 3', book: 3, rate: 1 },
+    { id: 3, text: 'Si Monsieur et Madame préfèrent s\'envoyer des fions dans l\'intimité, je peux aussi me retirer.', character: 'angharad', episode: 'La Joute Ancillaire', book: 1, rate: 3 },
+    { id: 4, text: 'Oulala (Merlin)', character: 'Merlin', episode: 'Episode 4', book: 3, rate: 4 }
   ];
 
   shuffle(allSentences);
@@ -42,7 +42,8 @@ angular.module('kaamelott.services', [])
 	{ id: 'leodagan', name: 'Leodagan' }, 
 	{ id: 'caradoc', name: 'Caradoc' }, 
 	{ id: 'perceval', name: 'Perceval' }, 
-	{ id: 'merlin', name: 'Merlin' }
+	{ id: 'merlin', name: 'Merlin' },
+	{ id: 'angharad', name: 'Angharad' }
 	];
 
   return {
@@ -64,6 +65,9 @@ angular.module('kaamelott.services', [])
 	return {
 		all: function() {
 			return allBooks;
+		},
+		get: function(index) {
+			return allBooks[index];
 		}
 	};
   
