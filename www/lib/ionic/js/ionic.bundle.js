@@ -9,7 +9,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.3-nightly-1950
+ * Ionic, v1.0.0-beta.4
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -26,7 +26,7 @@
 window.ionic = {
   controllers: {},
   views: {},
-  version: '1.0.0-beta.3-nightly-1950'
+  version: '1.0.0-beta.4'
 };
 
 (function(ionic) {
@@ -419,36 +419,31 @@ window.ionic = {
 (function(ionic) {
 
   // Custom event polyfill
-  if(!window.CustomEvent) {
-    (function() {
-      var CustomEvent;
-
-      CustomEvent = function(event, params) {
-        var evt;
-        params = params || {
-          bubbles: false,
-          cancelable: false,
-          detail: undefined
-        };
-        try {
-          evt = document.createEvent("CustomEvent");
-          evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-        } catch (error) {
-          // fallback for browsers that don't support createEvent('CustomEvent')
-          evt = document.createEvent("Event");
-          for (var param in params) {
-            evt[param] = params[param];
-          }
-          evt.initEvent(event, params.bubbles, params.cancelable);
-        }
-        return evt;
+  ionic.CustomEvent = window.CustomEvent || (function() {
+    var CustomEvent;
+    CustomEvent = function(event, params) {
+      var evt;
+      params = params || {
+        bubbles: false,
+        cancelable: false,
+        detail: undefined
       };
-
-      CustomEvent.prototype = window.Event.prototype;
-
-      window.CustomEvent = CustomEvent;
-    })();
-  }
+      try {
+        evt = document.createEvent("CustomEvent");
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+      } catch (error) {
+        // fallback for browsers that don't support createEvent('CustomEvent')
+        evt = document.createEvent("Event");
+        for (var param in params) {
+          evt[param] = params[param];
+        }
+        evt.initEvent(event, params.bubbles, params.cancelable);
+      }
+      return evt;
+    }
+    CustomEvent.prototype = window.Event.prototype;
+    return CustomEvent;
+  })();
 
 
   /**
@@ -471,7 +466,7 @@ window.ionic = {
      */
     // Trigger a new event
     trigger: function(eventType, data, bubbles, cancelable) {
-      var event = new CustomEvent(eventType, {
+      var event = new ionic.CustomEvent(eventType, {
         detail: data,
         bubbles: !!bubbles,
         cancelable: !!cancelable
@@ -2060,6 +2055,8 @@ window.ionic = {
       if(this.isWebView()) {
         this.platforms.push('webview');
         this.platforms.push('cordova');
+      } else {
+        this.platforms.push('browser');
       }
       if(this.isIPad()) this.platforms.push('ipad');
 
@@ -2099,7 +2096,10 @@ window.ionic = {
      * @returns {boolean} Whether we are running on iPad.
      */
     isIPad: function() {
-      return this.ua.toLowerCase().indexOf('ipad') >= 0;
+      if( /iPad/i.test(window.navigator.platform) ) {
+        return true;
+      }
+      return /iPad/i.test(this.ua);
     },
     /**
      * @ngdoc method
@@ -2140,7 +2140,7 @@ window.ionic = {
       } else if(this.ua.indexOf('iPhone') > -1 || this.ua.indexOf('iPad') > -1 || this.ua.indexOf('iPod') > -1) {
         platformName = 'ios';
       } else {
-        platformName = '';
+        platformName = window.navigator.platform && window.navigator.platform.toLowerCase().split(' ')[0] || '';
       }
     },
 
@@ -2382,34 +2382,64 @@ window.ionic = {
 })(document, ionic);
 
 
+/**
+ * @ngdoc page
+ * @name tap
+ * @module ionic
+ * @description
+ * On touch devices such as a phone or tablet, some browsers implement a 300ms delay between
+ * the time the user stops touching the display and the moment the browser executes the
+ * click. This delay was initially introduced so the browser can know whether the user wants to
+ * double-tap to zoom in on the webpage.  Basically, the browser waits roughly 300ms to see if
+ * the user is double-tapping, or just tapping on the display once.
+ *
+ * Out of the box, Ionic automatically removes the 300ms delay in order to make Ionic apps
+ * feel more "native" like. Resultingly, other solutions such as
+ * [fastclick](https://github.com/ftlabs/fastclick) and Angular's
+ * [ngTouch](https://docs.angularjs.org/api/ngTouch) should not be included, to avoid conflicts.
+ *
+ * In some cases, third-party libraries may also be working with touch events which can interfere
+ * with the tap system. For example, mapping libraries like Google or Leaflet Maps often implement
+ * a touch detection system which conflicts with Ionic's tap system.
+ *
+ * ### Disabling the tap system
+ *
+ * To disable the tap for an element and all of its children elements,
+ * add the attribute `data-tap-disabled="true"`.
+ *
+ * ```html
+ * <div data-tap-disabled="true">
+ *     <div id="google-map"></div>
+ * </div>
+ * ```
+ *
+ * ### Additional Notes:
+ *
+ * - Ionic tap  works with Ionic's JavaScript scrolling
+ * - Elements can come and go from the DOM and Ionic tap doesn't keep adding and removing
+ *   listeners
+ * - No "tap delay" after the first "tap" (you can tap as fast as you want, they all click)
+ * - Minimal events listeners, only being added to document
+ * - Correct focus in/out on each input type (select, textearea, range) on each platform/device
+ * - Shows and hides virtual keyboard correctly for each platform/device
+ * - Works with labels surrounding inputs
+ * - Does not fire off a click if the user moves the pointer too far
+ * - Adds and removes an 'activated' css class
+ * - Multiple [unit tests](https://github.com/driftyco/ionic/blob/master/test/unit/utils/tap.unit.js) for each scenario
+ *
+ */
 /*
 
  IONIC TAP
  ---------------
  - Both touch and mouse events are added to the document.body on DOM ready
- - If a touch event happens, it removes the mouse event listeners (temporarily)
- - Remembers the last touchstart event
+ - If a touch event happens, it does not use mouse event listeners
  - On touchend, if the distance between start and end was small, trigger a click
  - In the triggered click event, add a 'isIonicTap' property
  - The triggered click receives the same x,y coordinates as as the end event
  - On document.body click listener (with useCapture=true), only allow clicks with 'isIonicTap'
- - After XXms, bring back the mouse event listeners incase they switch from touch and mouse
- - If no touch events and only mouse, then touch events never fire, only mouse
  - Triggering clicks with mouse events work the same as touch, except with mousedown/mouseup
  - Tapping inputs is disabled during scrolling
-
- - Does not require other libraries to hook into ionic.tap, it just works
- - Elements can come and go from the DOM and it doesn't have to keep adding and removing listeners
- - No "tap delay" after the first "tap" (you can tap as fast as you want, they all click)
- - Minimal events listeners, only being added to document.body
- - Correct focus in/out on each input type on each platform/device
- - Shows and hides virtual keyboard correctly for each platform/device
- - No user-agent sniffing
- - Works with labels surrounding inputs
- - Does not fire off a click if the user moves the pointer too far
- - Adds and removes an 'activated' css class
- - Multiple unit tests for each scenario
-
 */
 
 var tapDoc; // the element which the listeners are on (document.body)
@@ -2925,7 +2955,6 @@ ionic.DomUtil.ready(function(){
   }
 
   function activateElements() {
-    // console.log('ACTIVATING');
     // activate all elements in the queue
     for(var key in queueElements) {
       if(queueElements[key]) {
@@ -3145,30 +3174,36 @@ var keyboardIsOpen;
 var keyboardActiveElement;
 var keyboardFocusOutTimer;
 var keyboardFocusInTimer;
+var keyboardLastShow = 0;
 
 var KEYBOARD_OPEN_CSS = 'keyboard-open';
 var SCROLL_CONTAINER_CSS = 'scroll';
 
 ionic.keyboard = {
   isOpen: false,
-  height: null
+  height: null,
+  landscape: false,
 };
 
 function keyboardInit() {
   if( keyboardHasPlugin() ) {
     window.addEventListener('native.showkeyboard', keyboardNativeShow);
+    window.addEventListener('native.hidekeyboard', keyboardFocusOut);
+  }
+  else {
+    document.body.addEventListener('focusout', keyboardFocusOut);
   }
 
   document.body.addEventListener('ionic.focusin', keyboardBrowserFocusIn);
   document.body.addEventListener('focusin', keyboardBrowserFocusIn);
 
-  document.body.addEventListener('focusout', keyboardFocusOut);
   document.body.addEventListener('orientationchange', keyboardOrientationChange);
 
   document.removeEventListener('touchstart', keyboardInit);
 }
 
 function keyboardNativeShow(e) {
+  clearTimeout(keyboardFocusOutTimer);
   ionic.keyboard.height = e.keyboardHeight;
 }
 
@@ -3190,10 +3225,27 @@ function keyboardSetShow(e) {
   clearTimeout(keyboardFocusOutTimer);
 
   keyboardFocusInTimer = setTimeout(function(){
-    var keyboardHeight = keyboardGetHeight();
+    if ( keyboardLastShow + 350 > Date.now() ) return; 
+    keyboardLastShow = Date.now();
+    var keyboardHeight; 
     var elementBounds = keyboardActiveElement.getBoundingClientRect();
+    var count = 0;
 
-    keyboardShow(e.target, elementBounds.top, elementBounds.bottom, keyboardViewportHeight, keyboardHeight);
+    var pollKeyboardHeight = setInterval(function(){
+
+      keyboardHeight = keyboardGetHeight();
+      if (count > 10){
+        clearInterval(pollKeyboardHeight);
+        //waited long enough, just guess
+        keyboardHeight = 275;
+      }
+      if (keyboardHeight){
+        keyboardShow(e.target, elementBounds.top, elementBounds.bottom, keyboardViewportHeight, keyboardHeight);
+        clearInterval(pollKeyboardHeight);
+      }
+      count++;
+      
+    }, 100); 
   }, 32);
 }
 
@@ -3205,15 +3257,9 @@ function keyboardShow(element, elementTop, elementBottom, viewportHeight, keyboa
     keyboardHeight: keyboardHeight
   };
 
-  if( keyboardIsOverWebView() ) {
-    // keyboard sits on top of the view, but doesn't adjust the view's height
-    // lower the content height by subtracting the keyboard height from the view height
-    details.contentHeight = viewportHeight - keyboardHeight;
-  } else {
-    // view's height was shrunk down and the keyboard takes up the space the view doesn't fill
-    // do not add extra padding at the bottom of the scroll view, native already did that
-    details.contentHeight = viewportHeight;
-  }
+  details.hasPlugin = keyboardHasPlugin();
+
+  details.contentHeight = viewportHeight - keyboardHeight;
 
   void 0;
 
@@ -3284,32 +3330,70 @@ function keyboardPreventDefault(e) {
 }
 
 function keyboardOrientationChange() {
-  keyboardViewportHeight = window.innerHeight;
-  setTimeout(function(){
-    keyboardViewportHeight = window.innerHeight;
-  }, 999);
+  var updatedViewportHeight = window.innerHeight;
+
+  //too slow, have to wait for updated height
+  if (updatedViewportHeight === keyboardViewportHeight){
+    var count = 0;
+    var pollViewportHeight = setInterval(function(){
+      //give up
+      if (count > 10){
+        clearInterval(pollViewportHeight);
+      }
+
+      updatedViewportHeight = window.innerHeight;
+      
+      if (updatedViewportHeight !== keyboardViewportHeight){
+        if (updatedViewportHeight < keyboardViewportHeight){
+          ionic.keyboard.landscape = true; 
+        }
+        else {
+          ionic.keyboard.landscape = false;
+        }
+        keyboardViewportHeight = updatedViewportHeight;
+        clearInterval(pollViewportHeight);
+      }
+      count++;
+
+    }, 50);
+  }
+  else {
+    keyboardViewportHeight = updatedViewportHeight;    
+  }
 }
 
 function keyboardGetHeight() {
   // check if we are already have a keyboard height from the plugin
-  if (ionic.keyboard.height ) {
+  if ( ionic.keyboard.height ) {
     return ionic.keyboard.height;
+  }
+
+  if ( ionic.Platform.isAndroid() ){
+    //should be using the plugin, no way to know how big the keyboard is, so guess
+    if ( ionic.Platform.isFullScreen ){
+      return 275;
+    }
+    //otherwise, wait for the screen to resize
+    if ( window.innerHeight < keyboardViewportHeight ){
+      return keyboardViewportHeight - window.innerHeight;
+    }
+    else {
+      return 0;
+    }
   }
 
   // fallback for when its the webview without the plugin
   // or for just the standard web browser
   if( ionic.Platform.isIOS() ) {
-    if( ionic.Platform.isWebView() ) {
-      return 260;
+    if ( ionic.keyboard.landscape ){
+      return 206;
     }
-    return 216;
-  } else if( ionic.Platform.isAndroid() ) {
-    if( ionic.Platform.isWebView() ) {
-      return 220;
+
+    if (!ionic.Platform.isWebView()){
+      return 216;
     }
-    if( ionic.Platform.version() <= 4.3) {
-      return 230;
-    }
+
+    return 260;
   }
 
   // safe guess
@@ -3324,11 +3408,6 @@ function keyboardIsWithinScroll(ele) {
     ele = ele.parentElement;
   }
   return false;
-}
-
-function keyboardIsOverWebView() {
-  return ( ionic.Platform.isIOS() ) ||
-         ( ionic.Platform.isAndroid() && !ionic.Platform.isWebView() );
 }
 
 function keyboardHasPlugin() {
@@ -3352,6 +3431,14 @@ ionic.Platform.ready(function() {
 var viewportTag;
 var viewportProperties = {};
 
+ionic.viewport = {
+  orientation: function() {
+    // 0 = Portrait
+    // 90 = Landscape
+    // not using window.orientation because each device has a different implementation
+    return (window.innerWidth > window.innerHeight ? 90 : 0);
+  }
+};
 
 function viewportLoadTag() {
   var x;
@@ -3367,43 +3454,112 @@ function viewportLoadTag() {
     var props = viewportTag.content.toLowerCase().replace(/\s+/g, '').split(',');
     var keyValue;
     for(x=0; x<props.length; x++) {
-      keyValue = props[x].split('=');
-      if(keyValue.length == 2) viewportProperties[ keyValue[0] ] = keyValue[1];
+      if(props[x] != '') {
+        keyValue = props[x].split('=');
+        viewportProperties[ keyValue[0] ] = (keyValue.length > 1 ? keyValue[1] : '_');
+      }
     }
-    viewportInitWebView();
+    viewportUpdate();
   }
 }
 
-function viewportInitWebView() {
-  var hasViewportChange = false;
+function viewportUpdate() {
+  // unit tests in viewport.unit.js
 
-  if( ionic.Platform.isWebView() ) {
-    if( viewportProperties.height != 'device-height' ) {
-      viewportProperties.height = 'device-height';
-      hasViewportChange = true;
+  var initWidth = viewportProperties.width;
+  var initHeight = viewportProperties.height;
+  var p = ionic.Platform;
+  var version = p.version();
+  var DEVICE_WIDTH = 'device-width';
+  var DEVICE_HEIGHT = 'device-height';
+  var orientation = ionic.viewport.orientation();
+
+  // Most times we're removing the height and adding the width
+  // So this is the default to start with, then modify per platform/version/oreintation
+  delete viewportProperties.height;
+  viewportProperties.width = DEVICE_WIDTH;
+
+  if( p.isIPad() ) {
+    // iPad
+
+    if( version > 7 ) {
+      // iPad >= 7.1
+      // https://issues.apache.org/jira/browse/CB-4323
+      delete viewportProperties.width;
+
+    } else {
+      // iPad <= 7.0
+
+      if( p.isWebView() ) {
+        // iPad <= 7.0 WebView
+
+        if( orientation == 90 ) {
+          // iPad <= 7.0 WebView Landscape
+          viewportProperties.height = '0';
+
+        } else if(version == 7) {
+          // iPad <= 7.0 WebView Portait
+          viewportProperties.height = DEVICE_HEIGHT;
+        }
+      } else {
+        // iPad <= 6.1 Browser
+        if(version < 7) {
+          viewportProperties.height = '0';
+        }
+      }
     }
-  } else if( viewportProperties.height ) {
-    delete viewportProperties.height;
-    hasViewportChange = true;
+
+  } else if( p.isIOS() ) {
+    // iPhone
+
+    if( p.isWebView() ) {
+      // iPhone WebView
+
+      if(version > 7) {
+        // iPhone >= 7.1 WebView
+        delete viewportProperties.width;
+
+      } else if(version < 7) {
+        // iPhone <= 6.1 WebView
+        // if height was set it needs to get removed with this hack for <= 6.1
+        if( initHeight ) viewportProperties.height = '0';
+      }
+
+    } else {
+      // iPhone Browser
+
+      if (version < 7) {
+        // iPhone <= 6.1 Browser
+        // if height was set it needs to get removed with this hack for <= 6.1
+        if( initHeight ) viewportProperties.height = '0';
+      }
+    }
+
   }
-  if(hasViewportChange) viewportUpdate();
+
+  // only update the viewport tag if there was a change
+  if(initWidth !== viewportProperties.width || initHeight !== viewportProperties.height) {
+    viewportTagUpdate();
+  }
 }
 
-function viewportUpdate(updates) {
-  if(!viewportTag) return;
-
-  ionic.Utils.extend(viewportProperties, updates);
-
+function viewportTagUpdate() {
   var key, props = [];
   for(key in viewportProperties) {
-    if(viewportProperties[key]) props.push(key + '=' + viewportProperties[key]);
+    if( viewportProperties[key] ) {
+      props.push(key + (viewportProperties[key] == '_' ? '' : '=' + viewportProperties[key]) );
+    }
   }
 
-  viewportTag.content = props.join(',');
+  viewportTag.content = props.join(', ');
 }
 
-ionic.DomUtil.ready(function() {
+ionic.Platform.ready(function() {
   viewportLoadTag();
+
+  window.addEventListener("orientationchange", function(){
+    setTimeout(viewportUpdate, 1000);
+  }, false);
 });
 
 (function(ionic) {
@@ -3802,7 +3958,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
       self.resize();
     }, 1000, true);
 
-    this.onScroll = function(scrollTop) {
+    this.onScroll = function() {
 
       if(!ionic.scroll.isScrolling) {
         setTimeout(self.setScrollStart, 50);
@@ -3825,6 +3981,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
     };
 
     this.triggerScrollEvent = ionic.throttle(function() {
+      self.onScroll();
       ionic.trigger('scroll', {
         scrollTop: self.__scrollTop,
         scrollLeft: self.__scrollLeft,
@@ -4044,15 +4201,26 @@ ionic.views.Scroll = ionic.views.View.inherit({
       if( !self.isScrolledIntoView ) {
         // shrink scrollview so we can actually scroll if the input is hidden
         // if it isn't shrink so we can scroll to inputs under the keyboard
-        container.style.height = (container.clientHeight - e.detail.keyboardHeight) + "px";
-        container.style.overflow = "visible";
+        if (ionic.Platform.isIOS() || ionic.Platform.isFullScreen){
+          container.style.height = (container.clientHeight - e.detail.keyboardHeight) + "px";
+          container.style.overflow = "visible";
+          //update scroll view
+          self.resize();
+        }
         self.isScrolledIntoView = true;
-        //update scroll view
-        self.resize();
       }
 
       //If the element is positioned under the keyboard...
       if( e.detail.isElementUnderKeyboard ) {
+        var delay;
+        // Wait on android for scroll view to resize
+        if ( !ionic.Platform.isFullScreen && e.detail.hasPlugin ) {
+          delay = 350;
+        }
+        else {
+          delay = 80;
+        }
+
         //Put element in middle of visible screen
         //Wait for resize() to reset scroll position
         ionic.scroll.isScrolling = true;
@@ -4064,9 +4232,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
           ionic.tap.cloneFocusedInput(container, self);
           self.scrollBy(0, scrollTop, true);
           self.onScroll();
-        },
-          (ionic.Platform.isIOS() ? 80 : 350)
-        );
+        }, delay);
       }
 
       //Only the first scrollView parent of the element that broadcasted this event
@@ -4215,11 +4381,14 @@ ionic.views.Scroll = ionic.views.View.inherit({
         self.__fadeScrollbars('out');
       }, 100, false);
 
-      document.addEventListener("mousewheel", function(e) {
+      //For Firefox
+      document.addEventListener('mousewheel', onMouseWheel);
+      function onMouseWheel(e) {
+        self.hintResize();
         wheelShowBarFn();
         self.scrollBy(e.wheelDeltaX/self.options.wheelDampen, -e.wheelDeltaY/self.options.wheelDampen);
         wheelHideBarFn();
-      });
+      }
     }
   },
 
@@ -5697,6 +5866,9 @@ ionic.scroll = {
         }
 
         var margin = Math.max(leftWidth, rightWidth) + 10;
+
+        //Reset left and right before setting again
+        titleEl.style.left = titleEl.style.right = '';
 
         // Size and align the header titleEl based on the sizes of the left and
         // right children, and the desired alignment mode
@@ -37215,7 +37387,7 @@ angular.module('ui.router.compat')
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.3-nightly-1950
+ * Ionic, v1.0.0-beta.4
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -37809,6 +37981,7 @@ function($cacheFactory, $parse) {
         this.transcludeParent[0].appendChild(item.element[0]);
       }
       reconnectScope(item.scope);
+      !item.scope.$$phase && item.scope.$digest();
     },
     getLength: function() {
       return this.data && this.data.length || 0;
@@ -38083,7 +38256,7 @@ function($rootScope, $timeout) {
         this.renderItem(i, rect.primaryPos - startPos, rect.secondaryPos);
         i++;
       }
-      var bufferEndIndex = i -1;
+      var bufferEndIndex = i - 1;
 
       for (i in this.renderedItems) {
         if (i < bufferStartIndex || i > bufferEndIndex) {
@@ -38102,9 +38275,6 @@ function($rootScope, $timeout) {
           primaryPos, secondaryPos, secondaryPos
         );
         this.renderedItems[dataIndex] = item;
-        if (item.scope && !item.scope.$$phase) {
-          item.scope.$digest();
-        }
       } else {
         delete this.renderedItems[dataIndex];
       }
@@ -38310,10 +38480,12 @@ IonicModule
   '$q',
   '$log',
   '$compile',
-function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $compile) {
+  '$ionicPlatform',
+function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $compile, $ionicPlatform) {
 
   var loaderInstance;
-  //default value
+  //default values
+  var deregisterBackAction = angular.noop;
   var loadingShowDelay = $q.when();
 
   return {
@@ -38350,7 +38522,6 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
         appendTo: $document[0].body
       })
       .then(function(loader) {
-
         var self = loader;
 
         loader.show = function(options) {
@@ -38407,10 +38578,11 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
           $timeout.cancel(this.durationTimeout);
           this.isShown = false;
         };
+
         return loader;
       });
     }
-    return $q.when(loaderInstance);
+    return loaderInstance;
   }
 
   function showLoader(options) {
@@ -38418,10 +38590,16 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
     var delay = options.delay || options.showDelay || 0;
 
     //If loading.show() was called previously, cancel it and show with our new options
-    $timeout.cancel(loadingShowDelay);
+    loadingShowDelay && $timeout.cancel(loadingShowDelay);
     loadingShowDelay = $timeout(angular.noop, delay);
 
     loadingShowDelay.then(getLoader).then(function(loader) {
+      deregisterBackAction();
+      //Disable hardware back button while loading
+      deregisterBackAction = $ionicPlatform.registerBackButtonAction(
+        angular.noop,
+        PLATFORM_BACK_BUTTON_PRIORITY_LOADING
+      );
       return loader.show(options);
     });
 
@@ -38439,6 +38617,7 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
   }
 
   function hideLoader() {
+    deregisterBackAction();
     $timeout.cancel(loadingShowDelay);
     getLoader().then(function(loader) {
       loader.hide();
@@ -38542,7 +38721,10 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
       var modalEl = angular.element(self.modalEl);
 
       self.el.classList.remove('hide');
-      $document[0].body.classList.add('modal-open');
+      $timeout(function(){
+        $document[0].body.classList.add('modal-open');
+      }, 400)
+
 
       if(!self.el.parentElement) {
         modalEl.addClass(self.animation);
@@ -38809,8 +38991,10 @@ IonicModule
 ]));
 
 var PLATFORM_BACK_BUTTON_PRIORITY_VIEW = 100;
+var PLATFORM_BACK_BUTTON_PRIORITY_SIDE_MENU = 150;
 var PLATFORM_BACK_BUTTON_PRIORITY_ACTION_SHEET = 300;
-var PLATFORM_BACK_BUTTON_PRIORITY_POPUP = 500;
+var PLATFORM_BACK_BUTTON_PRIORITY_POPUP = 400;
+var PLATFORM_BACK_BUTTON_PRIORITY_LOADING = 500;
 /**
  * @ngdoc service
  * @name $ionicPlatform
@@ -40886,15 +41070,17 @@ function($scope, scrollViewOptions, $timeout, $window, $$scrollValueCache, $loca
 
     var viewId = historyData && historyData.viewId;
     if (viewId) {
-      self.rememberScrollPosition(viewId);
-      self.scrollToRememberedPosition();
+      $timeout(function() {
+        self.rememberScrollPosition(viewId);
+        self.scrollToRememberedPosition();
 
-      backListenDone = $rootScope.$on('$viewHistory.viewBack', function(e, fromViewId, toViewId) {
-        //When going back from this view, forget its saved scroll position
-        if (viewId === fromViewId) {
-          self.forgetScrollPosition();
-        }
-      });
+        backListenDone = $rootScope.$on('$viewHistory.viewBack', function(e, fromViewId, toViewId) {
+          //When going back from this view, forget its saved scroll position
+          if (viewId === fromViewId) {
+            self.forgetScrollPosition();
+          }
+        });
+      }, 1, false);
     }
   });
 
@@ -41000,8 +41186,12 @@ IonicModule
   '$scope',
   '$attrs',
   '$ionicSideMenuDelegate',
-function($scope, $attrs, $ionicSideMenuDelegate) {
+  '$ionicPlatform',
+function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform) {
+  var self = this;
   angular.extend(this, ionic.controllers.SideMenuController.prototype);
+
+  this.$scope = $scope;
 
   ionic.controllers.SideMenuController.call(this, {
     left: { width: 275 },
@@ -41025,10 +41215,28 @@ function($scope, $attrs, $ionicSideMenuDelegate) {
 
   $scope.sideMenuContentTranslateX = 0;
 
+
+  var deregisterBackButtonAction = angular.noop;
+  var closeSideMenu = angular.bind(this, this.close);
+  $scope.$watch(function() {
+    return self.getOpenAmount() !== 0;
+  }, function(isOpen) {
+    deregisterBackButtonAction();
+    if (isOpen) {
+      deregisterBackButtonAction = $ionicPlatform.registerBackButtonAction(
+        closeSideMenu,
+        PLATFORM_BACK_BUTTON_PRIORITY_SIDE_MENU
+      );
+    }
+  });
+
   var deregisterInstance = $ionicSideMenuDelegate._registerInstance(
     this, $attrs.delegateHandle
   );
-  $scope.$on('$destroy', deregisterInstance);
+  $scope.$on('$destroy', function() {
+    deregisterInstance();
+    deregisterBackButtonAction();
+  });
 }]);
 
 IonicModule
@@ -41280,18 +41488,18 @@ IonicModule
  * Here are a few things to keep in mind while using collection-repeat:
  *
  * 1. The data supplied to collection-repeat must be an array.
- * 2. You must explicitly tell the directive what size your items will be in the DOM
- * (pixel amount or percentage), using directive attributes (see below).
- * 3. The elements rendered will be absolutely positioned: be sure to let your CSS work with this (see below).
- * 4. Keep the HTML of your repeated elements as simple as possible. As the user scrolls down, elements
- * will be lazily compiled. Resultingly, the more complicated your elements, the more likely it is that
- * the on-demand compilation will cause jankiness in the user's scrolling.
- * 5. The more elements you render on the screen at a time, the slower the scrolling will be.
- * It is recommended to keep grids of collection-repeat list elements at 3-wide or less.
+ * 2. You must explicitly tell the directive what size your items will be in the DOM, using directive attributes. Pixel amounts or percentages are allowed (see below).
+ * 3. The elements rendered will be absolutely positioned: be sure to let your CSS work with
+ * this (see below).
+ * 4. Keep the HTML of your repeated elements as simple as possible. As the user scrolls down,
+ * elements will be lazily compiled. Resultingly, the more complicated your elements, the more
+ * likely it is that the on-demand compilation will cause some jerkiness in the user's scrolling.
+ * 5. The more elements you render on the screen per row, the more likelihood for scrolling to
+ * slow down. It is recommended to keep grids of collection-repeat list elements at 3-wide or less.
+ * For example, if you have a gallery of images just set their width to 33%.
  * 6. Each collection-repeat list will take up all of its parent scrollView's space.
  * If you wish to have multiple lists on one page, put each list within its own
  * {@link ionic.directive:ionScroll ionScroll} container.
- *
  *
  *
  * @usage
@@ -41389,6 +41597,11 @@ IonicModule
  * @param {expression} collection-item-height The height of the repeated element.  Can be a number (in pixels), or a percentage.
  *
  */
+var COLLECTION_REPEAT_SCROLLVIEW_XY_ERROR = "Cannot create a collection-repeat within a scrollView that is scrollable on both x and y axis.  Choose either x direction or y direction.";
+var COLLECTION_REPEAT_ATTR_HEIGHT_ERROR = "collection-repeat expected attribute collection-item-height to be a an expression that returns a number (in pixels) or percentage.";
+var COLLECTION_REPEAT_ATTR_WIDTH_ERROR = "collection-repeat expected attribute collection-item-width to be a an expression that returns a number (in pixels) or percentage.";
+var COLLECTION_REPEAT_ATTR_REPEAT_ERROR = "collection-repeat expected expression in form of '_item_ in _collection_[ track by _id_]' but got '%'";
+
 IonicModule
 .directive('collectionRepeat', [
   '$collectionRepeatManager',
@@ -41404,14 +41617,14 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
     link: function($scope, $element, $attr, scrollCtrl, $transclude) {
       var scrollView = scrollCtrl.scrollView;
       if (scrollView.options.scrollingX && scrollView.options.scrollingY) {
-        throw new Error("Cannot create a collection-repeat within a scrollView that is scrollable on both x and y axis.  Choose either x direction or y direction.");
+        throw new Error(COLLECTION_REPEAT_SCROLLVIEW_XY_ERROR);
       }
 
       var isVertical = !!scrollView.options.scrollingY;
       if (isVertical && !$attr.collectionItemHeight) {
-        throw new Error("collection-repeat expected attribute collection-item-height to be a an expression that returns a number.");
+        throw new Error(COLLECTION_REPEAT_ATTR_HEIGHT_ERROR);
       } else if (!isVertical && !$attr.collectionItemWidth) {
-        throw new Error("collection-repeat expected attribute collection-item-width to be a an expression that returns a number.");
+        throw new Error(COLLECTION_REPEAT_ATTR_WIDTH_ERROR);
       }
       $attr.collectionItemHeight = $attr.collectionItemHeight || '"100%"';
       $attr.collectionItemWidth = $attr.collectionItemWidth || '"100%"';
@@ -41440,16 +41653,20 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
 
       var match = $attr.collectionRepeat.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
       if (!match) {
-        throw new Error("collection-repeat expected expression in form of '_item_ in _collection_[ track by _id_]' but got '" + $attr.collectionRepeat + "'.");
+        throw new Error(COLLECTION_REPEAT_ATTR_REPEAT_ERROR
+                        .replace('%', $attr.collectionRepeat));
       }
+      var keyExpr = match[1];
+      var listExpr = match[2];
+      var trackByExpr = match[3];
 
       var dataSource = new $collectionDataSource({
         scope: $scope,
         transcludeFn: $transclude,
         transcludeParent: $element.parent(),
-        keyExpr: match[1],
-        listExpr: match[2],
-        trackByExpr: match[3],
+        keyExpr: keyExpr,
+        listExpr: listExpr,
+        trackByExpr: trackByExpr,
         heightGetter: heightGetter,
         widthGetter: widthGetter
       });
@@ -41459,7 +41676,7 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
         scrollView: scrollCtrl.scrollView,
       });
 
-      $scope.$watchCollection(dataSource.listExpr, function(value) {
+      $scope.$watchCollection(listExpr, function(value) {
         if (value && !angular.isArray(value)) {
           throw new Error("collection-repeat expects an array to repeat over, but instead got '" + typeof value + "'.");
         }
@@ -41471,15 +41688,16 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
         dataSource.setData(value);
         collectionRepeatManager.resize();
       }
-      var resize = angular.bind(collectionRepeatManager, collectionRepeatManager.resize);
-      ionic.on('resize', function() {
-        rerender($scope.$eval(dataSource.listExpr));
-      }, window);
+      function onWindowResize() {
+        rerender($scope.$eval(listExpr));
+      }
+
+      ionic.on('resize', onWindowResize, window);
 
       $scope.$on('$destroy', function() {
         collectionRepeatManager.destroy();
         dataSource.destroy();
-        ionic.off('resize', resize, window);
+        ionic.off('resize', onWindowResize, window);
       });
     }
   };
@@ -41949,8 +42167,6 @@ function($animate, $compile) {
       this.$scope = $scope;
       this.$element = $element;
     }],
-    priorty: Number.MAX_VALUE,
-    require: ['ionItem', '^ionList'],
     scope: true,
     compile: function($element, $attrs) {
       var isAnchor = angular.isDefined($attrs.href) || angular.isDefined($attrs.ngHref);
@@ -43174,7 +43390,8 @@ IonicModule
     require: '^$ionicScroll',
     template:
     '<div class="scroll-refresher">' +
-      '<div class="ionic-refresher-content">' +
+      '<div class="ionic-refresher-content" ' +
+      'ng-class="{\'ionic-refresher-with-text\': pullingText || refreshingText}">' +
         '<i class="icon {{pullingIcon}} icon-pulling"></i>' +
         '<div class="text-pulling" ng-bind-html="pullingText"></div>' +
         '<i class="icon {{refreshingIcon}} icon-refreshing"></i>' +
@@ -43947,6 +44164,9 @@ IonicModule
  *
  * See the {@link ionic.directive:ionTab} directive's documentation for more details on
  * individual tabs.
+ *
+ * Note: do not place ion-tabs inside of an ion-content element; it has been known to cause a
+ * certain CSS bug.
  *
  * @usage
  * ```html

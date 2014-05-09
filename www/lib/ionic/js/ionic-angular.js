@@ -2,7 +2,7 @@
  * Copyright 2014 Drifty Co.
  * http://drifty.com/
  *
- * Ionic, v1.0.0-beta.3-nightly-1950
+ * Ionic, v1.0.0-beta.4
  * A powerful HTML5 mobile app framework.
  * http://ionicframework.com/
  *
@@ -596,6 +596,7 @@ function($cacheFactory, $parse) {
         this.transcludeParent[0].appendChild(item.element[0]);
       }
       reconnectScope(item.scope);
+      !item.scope.$$phase && item.scope.$digest();
     },
     getLength: function() {
       return this.data && this.data.length || 0;
@@ -870,7 +871,7 @@ function($rootScope, $timeout) {
         this.renderItem(i, rect.primaryPos - startPos, rect.secondaryPos);
         i++;
       }
-      var bufferEndIndex = i -1;
+      var bufferEndIndex = i - 1;
 
       for (i in this.renderedItems) {
         if (i < bufferStartIndex || i > bufferEndIndex) {
@@ -889,9 +890,6 @@ function($rootScope, $timeout) {
           primaryPos, secondaryPos, secondaryPos
         );
         this.renderedItems[dataIndex] = item;
-        if (item.scope && !item.scope.$$phase) {
-          item.scope.$digest();
-        }
       } else {
         delete this.renderedItems[dataIndex];
       }
@@ -1097,10 +1095,12 @@ IonicModule
   '$q',
   '$log',
   '$compile',
-function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $compile) {
+  '$ionicPlatform',
+function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $compile, $ionicPlatform) {
 
   var loaderInstance;
-  //default value
+  //default values
+  var deregisterBackAction = angular.noop;
   var loadingShowDelay = $q.when();
 
   return {
@@ -1137,7 +1137,6 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
         appendTo: $document[0].body
       })
       .then(function(loader) {
-
         var self = loader;
 
         loader.show = function(options) {
@@ -1194,10 +1193,11 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
           $timeout.cancel(this.durationTimeout);
           this.isShown = false;
         };
+
         return loader;
       });
     }
-    return $q.when(loaderInstance);
+    return loaderInstance;
   }
 
   function showLoader(options) {
@@ -1205,10 +1205,16 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
     var delay = options.delay || options.showDelay || 0;
 
     //If loading.show() was called previously, cancel it and show with our new options
-    $timeout.cancel(loadingShowDelay);
+    loadingShowDelay && $timeout.cancel(loadingShowDelay);
     loadingShowDelay = $timeout(angular.noop, delay);
 
     loadingShowDelay.then(getLoader).then(function(loader) {
+      deregisterBackAction();
+      //Disable hardware back button while loading
+      deregisterBackAction = $ionicPlatform.registerBackButtonAction(
+        angular.noop,
+        PLATFORM_BACK_BUTTON_PRIORITY_LOADING
+      );
       return loader.show(options);
     });
 
@@ -1226,6 +1232,7 @@ function($document, $ionicTemplateLoader, $ionicBackdrop, $timeout, $q, $log, $c
   }
 
   function hideLoader() {
+    deregisterBackAction();
     $timeout.cancel(loadingShowDelay);
     getLoader().then(function(loader) {
       loader.hide();
@@ -1329,7 +1336,10 @@ function($rootScope, $document, $compile, $timeout, $ionicPlatform, $ionicTempla
       var modalEl = angular.element(self.modalEl);
 
       self.el.classList.remove('hide');
-      $document[0].body.classList.add('modal-open');
+      $timeout(function(){
+        $document[0].body.classList.add('modal-open');
+      }, 400)
+
 
       if(!self.el.parentElement) {
         modalEl.addClass(self.animation);
@@ -1596,8 +1606,10 @@ IonicModule
 ]));
 
 var PLATFORM_BACK_BUTTON_PRIORITY_VIEW = 100;
+var PLATFORM_BACK_BUTTON_PRIORITY_SIDE_MENU = 150;
 var PLATFORM_BACK_BUTTON_PRIORITY_ACTION_SHEET = 300;
-var PLATFORM_BACK_BUTTON_PRIORITY_POPUP = 500;
+var PLATFORM_BACK_BUTTON_PRIORITY_POPUP = 400;
+var PLATFORM_BACK_BUTTON_PRIORITY_LOADING = 500;
 /**
  * @ngdoc service
  * @name $ionicPlatform
@@ -3673,15 +3685,17 @@ function($scope, scrollViewOptions, $timeout, $window, $$scrollValueCache, $loca
 
     var viewId = historyData && historyData.viewId;
     if (viewId) {
-      self.rememberScrollPosition(viewId);
-      self.scrollToRememberedPosition();
+      $timeout(function() {
+        self.rememberScrollPosition(viewId);
+        self.scrollToRememberedPosition();
 
-      backListenDone = $rootScope.$on('$viewHistory.viewBack', function(e, fromViewId, toViewId) {
-        //When going back from this view, forget its saved scroll position
-        if (viewId === fromViewId) {
-          self.forgetScrollPosition();
-        }
-      });
+        backListenDone = $rootScope.$on('$viewHistory.viewBack', function(e, fromViewId, toViewId) {
+          //When going back from this view, forget its saved scroll position
+          if (viewId === fromViewId) {
+            self.forgetScrollPosition();
+          }
+        });
+      }, 1, false);
     }
   });
 
@@ -3787,8 +3801,12 @@ IonicModule
   '$scope',
   '$attrs',
   '$ionicSideMenuDelegate',
-function($scope, $attrs, $ionicSideMenuDelegate) {
+  '$ionicPlatform',
+function($scope, $attrs, $ionicSideMenuDelegate, $ionicPlatform) {
+  var self = this;
   angular.extend(this, ionic.controllers.SideMenuController.prototype);
+
+  this.$scope = $scope;
 
   ionic.controllers.SideMenuController.call(this, {
     left: { width: 275 },
@@ -3812,10 +3830,28 @@ function($scope, $attrs, $ionicSideMenuDelegate) {
 
   $scope.sideMenuContentTranslateX = 0;
 
+
+  var deregisterBackButtonAction = angular.noop;
+  var closeSideMenu = angular.bind(this, this.close);
+  $scope.$watch(function() {
+    return self.getOpenAmount() !== 0;
+  }, function(isOpen) {
+    deregisterBackButtonAction();
+    if (isOpen) {
+      deregisterBackButtonAction = $ionicPlatform.registerBackButtonAction(
+        closeSideMenu,
+        PLATFORM_BACK_BUTTON_PRIORITY_SIDE_MENU
+      );
+    }
+  });
+
   var deregisterInstance = $ionicSideMenuDelegate._registerInstance(
     this, $attrs.delegateHandle
   );
-  $scope.$on('$destroy', deregisterInstance);
+  $scope.$on('$destroy', function() {
+    deregisterInstance();
+    deregisterBackButtonAction();
+  });
 }]);
 
 IonicModule
@@ -4067,18 +4103,18 @@ IonicModule
  * Here are a few things to keep in mind while using collection-repeat:
  *
  * 1. The data supplied to collection-repeat must be an array.
- * 2. You must explicitly tell the directive what size your items will be in the DOM
- * (pixel amount or percentage), using directive attributes (see below).
- * 3. The elements rendered will be absolutely positioned: be sure to let your CSS work with this (see below).
- * 4. Keep the HTML of your repeated elements as simple as possible. As the user scrolls down, elements
- * will be lazily compiled. Resultingly, the more complicated your elements, the more likely it is that
- * the on-demand compilation will cause jankiness in the user's scrolling.
- * 5. The more elements you render on the screen at a time, the slower the scrolling will be.
- * It is recommended to keep grids of collection-repeat list elements at 3-wide or less.
+ * 2. You must explicitly tell the directive what size your items will be in the DOM, using directive attributes. Pixel amounts or percentages are allowed (see below).
+ * 3. The elements rendered will be absolutely positioned: be sure to let your CSS work with
+ * this (see below).
+ * 4. Keep the HTML of your repeated elements as simple as possible. As the user scrolls down,
+ * elements will be lazily compiled. Resultingly, the more complicated your elements, the more
+ * likely it is that the on-demand compilation will cause some jerkiness in the user's scrolling.
+ * 5. The more elements you render on the screen per row, the more likelihood for scrolling to
+ * slow down. It is recommended to keep grids of collection-repeat list elements at 3-wide or less.
+ * For example, if you have a gallery of images just set their width to 33%.
  * 6. Each collection-repeat list will take up all of its parent scrollView's space.
  * If you wish to have multiple lists on one page, put each list within its own
  * {@link ionic.directive:ionScroll ionScroll} container.
- *
  *
  *
  * @usage
@@ -4176,6 +4212,11 @@ IonicModule
  * @param {expression} collection-item-height The height of the repeated element.  Can be a number (in pixels), or a percentage.
  *
  */
+var COLLECTION_REPEAT_SCROLLVIEW_XY_ERROR = "Cannot create a collection-repeat within a scrollView that is scrollable on both x and y axis.  Choose either x direction or y direction.";
+var COLLECTION_REPEAT_ATTR_HEIGHT_ERROR = "collection-repeat expected attribute collection-item-height to be a an expression that returns a number (in pixels) or percentage.";
+var COLLECTION_REPEAT_ATTR_WIDTH_ERROR = "collection-repeat expected attribute collection-item-width to be a an expression that returns a number (in pixels) or percentage.";
+var COLLECTION_REPEAT_ATTR_REPEAT_ERROR = "collection-repeat expected expression in form of '_item_ in _collection_[ track by _id_]' but got '%'";
+
 IonicModule
 .directive('collectionRepeat', [
   '$collectionRepeatManager',
@@ -4191,14 +4232,14 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
     link: function($scope, $element, $attr, scrollCtrl, $transclude) {
       var scrollView = scrollCtrl.scrollView;
       if (scrollView.options.scrollingX && scrollView.options.scrollingY) {
-        throw new Error("Cannot create a collection-repeat within a scrollView that is scrollable on both x and y axis.  Choose either x direction or y direction.");
+        throw new Error(COLLECTION_REPEAT_SCROLLVIEW_XY_ERROR);
       }
 
       var isVertical = !!scrollView.options.scrollingY;
       if (isVertical && !$attr.collectionItemHeight) {
-        throw new Error("collection-repeat expected attribute collection-item-height to be a an expression that returns a number.");
+        throw new Error(COLLECTION_REPEAT_ATTR_HEIGHT_ERROR);
       } else if (!isVertical && !$attr.collectionItemWidth) {
-        throw new Error("collection-repeat expected attribute collection-item-width to be a an expression that returns a number.");
+        throw new Error(COLLECTION_REPEAT_ATTR_WIDTH_ERROR);
       }
       $attr.collectionItemHeight = $attr.collectionItemHeight || '"100%"';
       $attr.collectionItemWidth = $attr.collectionItemWidth || '"100%"';
@@ -4227,16 +4268,20 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
 
       var match = $attr.collectionRepeat.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
       if (!match) {
-        throw new Error("collection-repeat expected expression in form of '_item_ in _collection_[ track by _id_]' but got '" + $attr.collectionRepeat + "'.");
+        throw new Error(COLLECTION_REPEAT_ATTR_REPEAT_ERROR
+                        .replace('%', $attr.collectionRepeat));
       }
+      var keyExpr = match[1];
+      var listExpr = match[2];
+      var trackByExpr = match[3];
 
       var dataSource = new $collectionDataSource({
         scope: $scope,
         transcludeFn: $transclude,
         transcludeParent: $element.parent(),
-        keyExpr: match[1],
-        listExpr: match[2],
-        trackByExpr: match[3],
+        keyExpr: keyExpr,
+        listExpr: listExpr,
+        trackByExpr: trackByExpr,
         heightGetter: heightGetter,
         widthGetter: widthGetter
       });
@@ -4246,7 +4291,7 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
         scrollView: scrollCtrl.scrollView,
       });
 
-      $scope.$watchCollection(dataSource.listExpr, function(value) {
+      $scope.$watchCollection(listExpr, function(value) {
         if (value && !angular.isArray(value)) {
           throw new Error("collection-repeat expects an array to repeat over, but instead got '" + typeof value + "'.");
         }
@@ -4258,15 +4303,16 @@ function($collectionRepeatManager, $collectionDataSource, $parse) {
         dataSource.setData(value);
         collectionRepeatManager.resize();
       }
-      var resize = angular.bind(collectionRepeatManager, collectionRepeatManager.resize);
-      ionic.on('resize', function() {
-        rerender($scope.$eval(dataSource.listExpr));
-      }, window);
+      function onWindowResize() {
+        rerender($scope.$eval(listExpr));
+      }
+
+      ionic.on('resize', onWindowResize, window);
 
       $scope.$on('$destroy', function() {
         collectionRepeatManager.destroy();
         dataSource.destroy();
-        ionic.off('resize', resize, window);
+        ionic.off('resize', onWindowResize, window);
       });
     }
   };
@@ -4736,8 +4782,6 @@ function($animate, $compile) {
       this.$scope = $scope;
       this.$element = $element;
     }],
-    priorty: Number.MAX_VALUE,
-    require: ['ionItem', '^ionList'],
     scope: true,
     compile: function($element, $attrs) {
       var isAnchor = angular.isDefined($attrs.href) || angular.isDefined($attrs.ngHref);
@@ -5961,7 +6005,8 @@ IonicModule
     require: '^$ionicScroll',
     template:
     '<div class="scroll-refresher">' +
-      '<div class="ionic-refresher-content">' +
+      '<div class="ionic-refresher-content" ' +
+      'ng-class="{\'ionic-refresher-with-text\': pullingText || refreshingText}">' +
         '<i class="icon {{pullingIcon}} icon-pulling"></i>' +
         '<div class="text-pulling" ng-bind-html="pullingText"></div>' +
         '<i class="icon {{refreshingIcon}} icon-refreshing"></i>' +
@@ -6734,6 +6779,9 @@ IonicModule
  *
  * See the {@link ionic.directive:ionTab} directive's documentation for more details on
  * individual tabs.
+ *
+ * Note: do not place ion-tabs inside of an ion-content element; it has been known to cause a
+ * certain CSS bug.
  *
  * @usage
  * ```html
