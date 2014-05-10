@@ -27,10 +27,9 @@
               	<div id="dailySentence-container">
               	<div id="dailySentence-bg"></div>
               	<div id="dailySentence">
-                  <h1>{{sentence.character}}</h1>
-                  <p>{{sentence.text}}</p>
-                  <p>Livre {{getLabelOfBook(sentence.book)}}, épisode "{{sentence.episode}}"</p>
-                  {{test}}
+                  <p class="character">{{sentence.character}}</p>
+                  <p class="sentence">{{sentence.text}}</p>
+                  <p>Livre <span class="book">{{getLabelOfBook(sentence.book)}}</span>, épisode <span class="episode">{{sentence.episode}}</span></p>
 				</div>
 				</div>
                   

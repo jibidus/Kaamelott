@@ -1,6 +1,5 @@
 /* Empty. Add your own CSS if you like */
 
-/*
 @font-face{ 
 	font-family: 'Folkard';
 	src: url('/font/Folkard.eot');
@@ -9,11 +8,10 @@
 	     url('/font/Folkard.ttf') format('truetype'),
 	     url('/font/Folkard.svg#webfont') format('svg');
 }
-*/
 
 body {
   cursor: url('/img/finger.png'), auto;
-/*	font-family: "Folkard"; */
+  font-size: 14px;
   font-family: Papyrus; 
 }
 
@@ -27,8 +25,6 @@ body {
   color: #000;
   background-color: #fff;
   text-align: center;
-
-  font-weight: 300;
 }
 
 #logo {
@@ -80,6 +76,17 @@ body {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
+}
+
+.character {
+	font-size: 2rem;
+	font-family: 'Folkard', Papyrus; 
+}
+.sentence {
+	font-size: 1.4rem;
+}
+.book, .episode {
+	font-weight: bold;
 }
 
 /*  --------------------- Rating --------------------- */
