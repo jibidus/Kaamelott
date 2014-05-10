@@ -24,13 +24,10 @@
 			<ion-slide ng-repeat="sentence in sentences">
 				<ion-content id="dailySentencesView">
               	
-              	<div id="dailySentence-container">
-              	<div id="dailySentence-bg"></div>
               	<div id="dailySentence">
-                  <p class="character">{{sentence.character}}</p>
+                  <p class="character"><img src="/img/characters/Arthur.png" />{{sentence.character}}</p>
                   <p class="sentence">{{sentence.text}}</p>
                   <p>Livre <span class="book">{{getLabelOfBook(sentence.book)}}</span>, épisode <span class="episode">{{sentence.episode}}</span></p>
-				</div>
 				</div>
                   
 				<div>

@@ -54,7 +54,7 @@ body {
 /* --------------------- Daily sentences --------------------- */
 #dailySentencesView {
 	padding: 2em;
-	background-image: url('/img/background/dailySentences.jpg');
+	background-image: url('/img/background/dailySentences/fond_2048.jpg');
 	background-repeat: no-repeat;
 	
 	-moz-box-shadow: inset 0px 0px 100px 0px #000000;
@@ -64,7 +64,7 @@ body {
 	filter:progid:DXImageTransform.Microsoft.Shadow(color=#000000, Direction=NaN, Strength=100);
 }
 
-#dailySentence {
+.sentence {
 	background: rgba(200, 200, 200, 0.6);
 	border-radius: 5px;
 	
@@ -80,10 +80,20 @@ body {
 
 .character {
 	font-size: 2rem;
-	font-family: 'Folkard', Papyrus; 
+	font-family: 'Folkard', Papyrus;
+	text-align: left;
+	padding-left: 3rem;
+}
+.character img {
+	position: relative;
+	top: 3rem; 
+	width: 6rem;
+	vertical-align: bottom; 
 }
 .sentence {
+	padding-top: 1em;
 	font-size: 1.4rem;
+	padding-bottom: 1em;
 }
 .book, .episode {
 	font-weight: bold;
@@ -103,4 +113,38 @@ body {
 
 .icon-rate.not-selected {
 	background-image: url('/img/star-not-selected.gif');
+}
+
+
+
+/*  --------------------- Responsive Design --------------------- */
+
+/* #### Mobile Phones Portrait #### */
+@media screen and (max-device-width: 480px) and (orientation: portrait){
+  /* some CSS here */
+}
+
+/* #### Mobile Phones Landscape #### */
+@media screen and (max-device-width: 640px) and (orientation: landscape){
+  /* some CSS here */
+}
+
+/* #### Mobile Phones Portrait or Landscape #### */
+@media screen and (max-device-width: 640px){
+  /* some CSS here */
+}
+
+/* #### iPhone 4+ Portrait or Landscape #### */
+@media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
+  /* some CSS here */
+}
+
+/* #### Tablets Portrait or Landscape #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+  /* some CSS here */
+}
+
+/* #### Desktops #### */
+@media screen and (min-width: 1024px){
+  /* some CSS here */
 }
