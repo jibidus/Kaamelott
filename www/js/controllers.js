@@ -34,7 +34,6 @@ angular.module('kaamelott.controllers', [])
    };
    
    $scope.getLabelOfBook = function(index) {
-	   console.debug("getBook() with index "+index);
 	   return Books.get(index);
    };
 

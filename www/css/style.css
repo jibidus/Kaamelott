@@ -15,6 +15,8 @@ body {
   cursor: url('/img/finger.png'), auto;
 }
 
+/* --------------------- Is is really useful ??? --------------------- */
+
 .slider {
   height: 100%;
 }
@@ -47,52 +49,38 @@ body {
   margin: 10px 0px;
 }
 
+
+/* --------------------- Buttom buttons --------------------- */
+.bar {
+	background: none;
+}
+
 /* --------------------- Daily sentences --------------------- */
-/* Gaussien effect - http://jordanhollinger.com/2014/01/29/css-gaussian-blur-behind-a-translucent-box */
-/* Utiliser un fond uni transparant + bord arrondis + ombre portée ?? */
 #dailySentencesView {
 	padding: 2em;
-}
-
-#dailySentencesView, #dailySentence-bg {
 	background-image: url('/img/background/dailySentences.jpg');
 	background-repeat: no-repeat;
-}
-
-#dailySentence-container {
-	position: relative;
-}
-
-#dailySentence-bg {
-  /* Absolutely position it, but stretch it to all four corners, then put it just behind #search's z-index */
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  z-index: 99;
-  /* Pull the background 70px higher to the same place as #bg's */
-/*  background-position: center -70px; */
-  filter: blur(3px);
-  -webkit-filter: blur(3px);
-  -moz-filter: blur(3px);
-  filter: url('/img/blur3.svg#blur'); /* for Firefox */	
+	
+	-moz-box-shadow: inset 0px 0px 100px 0px #000000;
+	-webkit-box-shadow: inset 0px 0px 100px 0px #000000;
+	-o-box-shadow: inset 0px 0px 100px 0px #000000;
+	box-shadow: inset 0px 0px 100px 0px #000000;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#000000, Direction=NaN, Strength=100);
 }
 
 #dailySentence {
-  /* Put this on top of the blurred layer */
-  position: relative;
-  z-index: 100;
-  background: rgba(200, 200, 200, 0.3);
+	background: rgba(200, 200, 200, 0.6);
+	border-radius: 5px;
+	
+	-moz-box-shadow: 0px 0px 10px 4px #656565;
+	-webkit-box-shadow: 0px 0px 10px 4px #656565;
+	-o-box-shadow: 0px 0px 10px 4px #656565;
+	box-shadow: 0px 0px 10px 4px #656565;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=10);
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
 }
-
-/*
-@media (max-width: 600px ) {
-  #dailySentencesView { padding: 10px; }
-  #dailySentence-bg { background-position: center -10px; }
-}
-*/
-
 
 /*  --------------------- Rating --------------------- */
 .icon-rate {
