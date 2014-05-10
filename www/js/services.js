@@ -11,7 +11,7 @@ angular.module('kaamelott.services', [])
     { id: 0, text: 'Scruff McGruff (Arthur)', character: 'Arthur', episode: 'Episode 1', book: 1, rate: 2 },
     { id: 1, text: 'G.I. Joe (Leodagan)', character: 'Leodagan', episode: 'Episode 2', book: 2, rate: 2 },
     { id: 2, text: 'Miss Frizzle (Caradoc)', character: 'Caradoc', episode: 'Episode 3', book: 3, rate: 1 },
-    { id: 3, text: 'Si Monsieur et Madame préfèrent s\'envoyer des fions dans l\'intimité, je peux aussi me retirer.', character: 'angharad', episode: 'La Joute Ancillaire', book: 1, rate: 3 },
+    { id: 3, text: 'Si Monsieur et Madame pr√©f√®rent s\'envoyer des fions dans l\'intimit√©, je peux aussi me retirer.', character: 'angharad', episode: 'La Joute Ancillaire', book: 1, rate: 3 },
     { id: 4, text: 'Oulala (Merlin)', character: 'Merlin', episode: 'Episode 4', book: 3, rate: 4 }
   ];
 

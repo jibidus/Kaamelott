@@ -13,6 +13,8 @@
 
 body {
   cursor: url('/img/finger.png'), auto;
+/*	font-family: "Folkard"; */
+  font-family: Papyrus; 
 }
 
 /* --------------------- Is is really useful ??? --------------------- */
@@ -26,8 +28,6 @@ body {
   background-color: #fff;
   text-align: center;
 
-/*	font-family: "Folkard"; */
-  font-family: Papyrus; 
   font-weight: 300;
 }
 
