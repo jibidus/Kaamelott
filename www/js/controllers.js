@@ -33,10 +33,6 @@ angular.module('kaamelott.controllers', [])
 	   return [1, 2, 3, 4 ];
    };
    
-   $scope.getLabelOfBook = function(index) {
-	   return Books.get(index);
-   };
-
    function appendOneSlide() {
 	   if ($scope.sentences.length >= nbSentences) {
 		   Sentences.shuffle();

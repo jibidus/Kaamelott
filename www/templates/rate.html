@@ -1,0 +1,8 @@
+<a class="button button-icon icon icon-rate selected" 
+	ng-repeat="rate in maxRate().slice(0, sentence.rate)" 
+	ng-click="updateRate(rate)">
+</a>
+<a class="button button-icon icon icon-rate not-selected" 
+	ng-repeat="rate in maxRate().slice(sentence.rate)" 
+	ng-click="updateRate(rate)">
+</a>
