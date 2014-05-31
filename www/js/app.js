@@ -1,6 +1,6 @@
 // Kaamelott App
 
-angular.module('kaamelott', ['ionic', 'kaamelott.controllers', 'kaamelott.services', 'LocalStorageModule'])
+angular.module('kaamelott', ['ionic', 'kaamelott.controllers', 'kaamelott.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
