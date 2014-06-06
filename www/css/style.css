@@ -2,15 +2,15 @@
 
 @font-face{ 
 	font-family: 'Folkard';
-	src: url('/font/Folkard.eot');
-	src: url('/font/Folkard.eot?#iefix') format('embedded-opentype'),
-	     url('/font/Folkard.woff') format('woff'),
-	     url('/font/Folkard.ttf') format('truetype'),
-	     url('/font/Folkard.svg#webfont') format('svg');
+	src: url('../font/Folkard.eot');
+	src: url('../font/Folkard.eot?#iefix') format('embedded-opentype'),
+	     url('../font/Folkard.woff') format('woff'),
+	     url('../font/Folkard.ttf') format('truetype'),
+	     url('../font/Folkard.svg#webfont') format('svg');
 }
 
 body {
-  cursor: url('/img/finger.png'), auto;
+  cursor: url('../img/finger.png'), auto;
   font-size: 14px;
   font-family: Papyrus; 
 }
@@ -52,6 +52,7 @@ body {
 }
 
 /* --------------------- Daily sentences --------------------- */
+/*
 #dailySentencesView {
 	padding: 2em;
 	background-image: url('/img/background/dailySentences/fond_2048.jpg');
@@ -77,6 +78,7 @@ body {
 	-webkit-border-radius: 10px;
 	border-radius: 10px;
 }
+*/
 
 .character {
 	font-size: 2rem;
@@ -86,7 +88,8 @@ body {
 }
 .character img {
 	position: relative;
-	top: 3rem; 
+	top: 1rem;
+	left: -1rem; 
 	width: 6rem;
 	vertical-align: bottom; 
 }
@@ -108,11 +111,11 @@ body {
 }
 
 .icon-rate.selected {
-	background-image: url('/img/star-selected.gif');
+	background-image: url('../img/star-selected.gif');
 }
 
 .icon-rate.not-selected {
-	background-image: url('/img/star-not-selected.gif');
+	background-image: url('../img/star-not-selected.gif');
 }
 
 
