@@ -1,5 +1,4 @@
-/* Empty. Add your own CSS if you like */
-
+/* test */
 @font-face{ 
 	font-family: 'Folkard';
 	src: url('../font/Folkard.eot');
@@ -10,23 +9,24 @@
 }
 
 body {
-  cursor: url('../img/finger.png'), auto;
-  font-size: 14px;
-  font-family: Papyrus; 
+	cursor: url('../img/finger.png'), auto;
+	font-size: 1.4rem;
+	font-family: Papyrus;
 }
 
-/* --------------------- Is is really useful ??? --------------------- */
+/* --------------------- Common ionic style --------------------- */
 
 .slider {
   height: 100%;
+  margin: 0 0.4em 0 0.4em;
 }
+/*
 .slider-slide {
   padding-top: 80px;
   color: #000;
   background-color: #fff;
   text-align: center;
 }
-
 #logo {
   margin: 30px 0px;
 }
@@ -44,6 +44,7 @@ body {
   list-style: decimal;
   margin: 10px 0px;
 }
+*/
 
 
 /* --------------------- Buttom buttons --------------------- */
@@ -81,8 +82,8 @@ body {
 */
 
 .character {
-	font-size: 2rem;
-	font-family: 'Folkard', Papyrus;
+	font-size: 1.6rem;
+	font-weight: bold;
 	text-align: left;
 	padding-left: 3rem;
 }
@@ -90,13 +91,19 @@ body {
 	position: relative;
 	top: 1rem;
 	left: -1rem; 
-	width: 6rem;
-	vertical-align: bottom; 
+	width: 5rem;
+	vertical-align: bottom;
 }
 .sentence {
 	padding-top: 1em;
-	font-size: 1.4rem;
-	padding-bottom: 1em;
+	font-size: 1.1rem;
+	line-height: 1.2em;
+	padding-top: 2em;
+}
+.reference {
+	font-size: 0.9rem;
+	padding-top: 2em;
+	text-align: center;
 }
 .book, .episode {
 	font-weight: bold;
@@ -124,30 +131,43 @@ body {
 
 /* #### Mobile Phones Portrait #### */
 @media screen and (max-device-width: 480px) and (orientation: portrait){
-  /* some CSS here */
 }
 
 /* #### Mobile Phones Landscape #### */
 @media screen and (max-device-width: 640px) and (orientation: landscape){
-  /* some CSS here */
 }
 
 /* #### Mobile Phones Portrait or Landscape #### */
 @media screen and (max-device-width: 640px){
-  /* some CSS here */
 }
 
 /* #### iPhone 4+ Portrait or Landscape #### */
 @media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
-  /* some CSS here */
 }
 
 /* #### Tablets Portrait or Landscape #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-  /* some CSS here */
 }
 
 /* #### Desktops #### */
 @media screen and (min-width: 1024px){
-  /* some CSS here */
+	body {
+		cursor: url('../img/finger.png'), auto;
+		font-size: 1.0rem;
+	}
+	.slider {
+  		margin: 0 1em 0 1em;
+	}
+	.character {
+		font-size: 2rem;
+	}	
+	.character img {
+		width: 6rem;
+	}	
+	.sentence {
+		font-size: 1.3rem;
+	}
+	.reference {
+		font-size: 1.1rem;
+	}
 }

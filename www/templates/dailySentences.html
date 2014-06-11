@@ -27,17 +27,19 @@
               	<div id="dailySentence">
                   <p class="character"><img src="/img/characters/Arthur.png" />{{sentence.character.name}}</p>
                   <p class="sentence">{{sentence.text}}</p>
-                  <p>Livre <span class="book">{{sentence.episode.book}}</span>, épisode <span class="episode">{{sentence.episode.title}}</span> ({{sentence.episode.number}})</p>
+                  <p class="reference">Livre <span class="book">{{sentence.episode.book}}</span>, épisode {{sentence.episode.number}} : <span class="episode">{{sentence.episode.title}}</span></p>
 				</div>
                   
 				<div>
 				<!-- TODO Create directive (see rate.html) -->
+				<!-- 
                   	<a class="button button-icon icon icon-rate selected" 
                   		ng-repeat="rate in maxRate().slice(0, sentence.rate)" 
                   		ng-click="updateRate(rate)"></a>
                   	<a class="button button-icon icon icon-rate not-selected" 
                   		ng-repeat="rate in maxRate().slice(sentence.rate)" 
                   		ng-click="updateRate(rate)"></a>
+                  		 -->
 				</div>
 
                 </ion-content>
