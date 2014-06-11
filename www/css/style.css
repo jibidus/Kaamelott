@@ -1,4 +1,3 @@
-/* test */
 @font-face{ 
 	font-family: 'Folkard';
 	src: url('../font/Folkard.eot');
@@ -9,8 +8,6 @@
 }
 
 body {
-	cursor: url('../img/finger.png'), auto;
-	font-size: 1.4rem;
 	font-family: Papyrus;
 }
 
@@ -18,8 +15,21 @@ body {
 
 .slider {
   height: 100%;
-  margin: 0 0.4em 0 0.4em;
+  margin: 0.4em 0.4em 0 0.4em;
 }
+
+/* For debug purpose */
+.slider::before {   
+  background: #ffc;   
+  width: 96%;   
+  padding: 1em 2%;   
+  float: top;   
+  clear: both;   
+  font-size: 14px;   
+  font-size: .875rem;      
+  content: "Defautl resolution"; 
+} 
+  
 /*
 .slider-slide {
   padding-top: 80px;
@@ -82,7 +92,6 @@ body {
 */
 
 .character {
-	font-size: 1.6rem;
 	font-weight: bold;
 	text-align: left;
 	padding-left: 3rem;
@@ -90,19 +99,16 @@ body {
 .character img {
 	position: relative;
 	top: 1rem;
-	left: -1rem; 
-	width: 5rem;
+	left: -1rem;
 	vertical-align: bottom;
+	margin-right: 0.5rem;
 }
 .sentence {
-	padding-top: 1em;
-	font-size: 1.1rem;
-	line-height: 1.2em;
-	padding-top: 2em;
+	line-height: 1.2rem;
+	padding-top: 2rem;
 }
 .reference {
-	font-size: 0.9rem;
-	padding-top: 2em;
+	padding-top: 2rem;
 	text-align: center;
 }
 .book, .episode {
@@ -129,34 +135,103 @@ body {
 
 /*  --------------------- Responsive Design --------------------- */
 
-/* #### Mobile Phones Portrait #### */
-@media screen and (max-device-width: 480px) and (orientation: portrait){
+
+/* #### Tablets or landscape on mobile phone #### */
+@media screen and (max-width: 1024px){
+	.slider::before {   	  content: "Resolution < 1024"; 	} 
+	
+	.slider {
+  		margin: 1em 1em 0 1em;
+	}
+	.character {
+		font-size: 1.6rem;
+	}
+	.character img {
+		width: 5rem;
+	}
+	.sentence {
+		font-size: 1.1rem;
+	}
+	.reference {
+		font-size: 0.9rem;
+	}
+}
+
+
+/* #### Mobile Phones Portrait or Landscape #### */
+@media screen and (max-width: 640px){
+	.slider::before {   	  content: "Resolution < 640"; 	}
+	 
+	.character {
+		font-size: 1.3rem;
+		padding-left: 2rem;
+	}	
+	.character img {
+		width: 4rem;
+		margin-right: 0rem;
+		padding-right: 0rem;
+	}	
+	
 }
 
 /* #### Mobile Phones Landscape #### */
-@media screen and (max-device-width: 640px) and (orientation: landscape){
+@media screen and (max-width: 640px) and (orientation: landscape){
+	.slider::before {   	  content: "Resolution < 640 and landscape"; 	} 
 }
 
-/* #### Mobile Phones Portrait or Landscape #### */
-@media screen and (max-device-width: 640px){
+/* #### Mobile Phones Portrait #### */
+@media screen and (max-width: 480px) and (orientation: portrait){
+	.slider::before { content: "Resolution < 480 and portrait"; } 
+
+	.character {
+		font-size: 1.1rem;
+		padding-left: 1rem;
+	}	
+	.sentence {
+		line-height: 1.2rem;
+		padding-top: 1rem;
+	}
+	.reference {
+		padding-top: 1rem;
+	}
 }
+
 
 /* #### iPhone 4+ Portrait or Landscape #### */
 @media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
+	.slider::before {   	  content: "Resolution < 480 on iPhone"; 	} 
+	
+	.character {
+		font-size: 1.1rem;
+		padding-left: 1rem;
+	}	
+	.sentence {
+		font-size: 0.9rem;
+		line-height: 1.2rem;
+		padding-top: 1rem;
+	}
+	.reference {
+		font-size: 0.7rem;
+		padding-top: 1rem;
+	}
 }
 
 /* #### Tablets Portrait or Landscape #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+	.slider::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
+	
 }
 
 /* #### Desktops #### */
 @media screen and (min-width: 1024px){
+	.slider::before {   	  content: "Resolution > 1024 (Desktop)"; 	} 
+	
 	body {
 		cursor: url('../img/finger.png'), auto;
 		font-size: 1.0rem;
 	}
 	.slider {
-  		margin: 0 1em 0 1em;
+  		margin: 1em 1em 0 1em;
 	}
 	.character {
 		font-size: 2rem;
