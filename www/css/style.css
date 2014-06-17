@@ -1,3 +1,4 @@
+/* TODO Is is really necessary? */
 @font-face{ 
 	font-family: 'Folkard';
 	src: url('font/Folkard.eot');
@@ -15,7 +16,6 @@ body {
 
 .slider {
   height: 100%;
-  margin: 0.4em 0.4em 0 0.4em;
 }
 
 /* For debug purpose */
@@ -91,6 +91,9 @@ body {
 }
 */
 
+#dailySentence {
+  margin: 0.4em 0.4em 0 0.4em;
+}
 .character {
 	font-weight: bold;
 	text-align: left;
@@ -140,7 +143,7 @@ body {
 @media screen and (max-width: 1024px){
 	.slider::before {   	  content: "Resolution < 1024"; 	} 
 	
-	.slider {
+	#dailySentence {
   		margin: 1em 1em 0 1em;
 	}
 	.character {
@@ -230,7 +233,7 @@ body {
 		cursor: url('../img/finger.png'), auto;
 		font-size: 1.0rem;
 	}
-	.slider {
+	#dailySentence {
   		margin: 1em 1em 0 1em;
 	}
 	.character {
