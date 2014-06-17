@@ -1,10 +1,10 @@
 @font-face{ 
 	font-family: 'Folkard';
-	src: url('../font/Folkard.eot');
-	src: url('../font/Folkard.eot?#iefix') format('embedded-opentype'),
-	     url('../font/Folkard.woff') format('woff'),
-	     url('../font/Folkard.ttf') format('truetype'),
-	     url('../font/Folkard.svg#webfont') format('svg');
+	src: url('font/Folkard.eot');
+	src: url('font/Folkard.eot?#iefix') format('embedded-opentype'),
+	     url('font/Folkard.woff') format('woff'),
+	     url('font/Folkard.ttf') format('truetype'),
+	     url('font/Folkard.svg#webfont') format('svg');
 }
 
 body {
