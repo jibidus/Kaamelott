@@ -157,6 +157,31 @@ body {
 
 /*  --------------------- Responsive Design --------------------- */
 
+/* #### Desktops #### */
+@media screen and (min-width: 1024px){
+	.slider::before {   	  content: "Resolution > 1024 (Desktop)"; 	} 
+	
+	body {
+		cursor: url('../img/finger.png'), auto;
+		font-size: 1.0rem;
+	}
+	#dailySentence {
+  		margin: 1em 1em 0 1em;
+	}
+	.character {
+		font-size: 2rem;
+	}	
+	.character img {
+		width: 6rem;
+	}	
+	.sentence {
+		font-size: 1.6rem;
+		line-height: 2rem;
+	}
+	.reference {
+		font-size: 1.4rem;
+	}
+}
 
 /* #### Tablets or landscape on mobile phone #### */
 @media screen and (max-width: 1024px){
@@ -172,27 +197,32 @@ body {
 		width: 5rem;
 	}
 	.sentence {
-		font-size: 1.1rem;
+		font-size: 1.4rem;
+		line-height: 1.8rem;
 	}
 	.reference {
-		font-size: 0.9rem;
+		font-size: 1.2rem;
 	}
 }
 
 
 /* #### Mobile Phones Portrait or Landscape #### */
 @media screen and (max-width: 640px){
-	.slider::before {   	  content: "Resolution < 640"; 	}
+	.slider::before { content: "Resolution < 640"; 	}
 	 
 	.character {
-		font-size: 1.3rem;
-		padding-left: 2rem;
+		font-size: 1.4rem;
+		padding-left: 1rem;
 	}	
-	.character img {
-		width: 4rem;
-		margin-right: 0rem;
-		padding-right: 0rem;
-	}	
+	.sentence {
+		font-size: 1.2rem;
+		line-height: 1.4rem;
+		padding-top: 1rem;
+	}
+	.reference {
+		font-size: 1.1rem;
+		padding-top: 1rem;
+	}
 	
 }
 
@@ -205,17 +235,6 @@ body {
 @media screen and (max-width: 480px) and (orientation: portrait){
 	.slider::before { content: "Resolution < 480 and portrait"; } 
 
-	.character {
-		font-size: 1.1rem;
-		padding-left: 1rem;
-	}	
-	.sentence {
-		line-height: 1.2rem;
-		padding-top: 1rem;
-	}
-	.reference {
-		padding-top: 1rem;
-	}
 }
 
 
@@ -244,27 +263,3 @@ body {
 	
 }
 
-/* #### Desktops #### */
-@media screen and (min-width: 1024px){
-	.slider::before {   	  content: "Resolution > 1024 (Desktop)"; 	} 
-	
-	body {
-		cursor: url('../img/finger.png'), auto;
-		font-size: 1.0rem;
-	}
-	#dailySentence {
-  		margin: 1em 1em 0 1em;
-	}
-	.character {
-		font-size: 2rem;
-	}	
-	.character img {
-		width: 6rem;
-	}	
-	.sentence {
-		font-size: 1.3rem;
-	}
-	.reference {
-		font-size: 1.1rem;
-	}
-}
