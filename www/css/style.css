@@ -1,15 +1,33 @@
-/* TODO Is is really necessary? */
+/* --------------------- Fonts --------------------- */
 @font-face{ 
 	font-family: 'Folkard';
-	src: url('font/Folkard.eot');
-	src: url('font/Folkard.eot?#iefix') format('embedded-opentype'),
-	     url('font/Folkard.woff') format('woff'),
-	     url('font/Folkard.ttf') format('truetype'),
-	     url('font/Folkard.svg#webfont') format('svg');
+	src: url('../font/Folkard.eot');
+	src: url('../font/Folkard.eot?#iefix') format('embedded-opentype'),
+	     url('../font/Folkard.woff') format('woff'),
+	     url('../font/Folkard.ttf') format('truetype'),
+	     url('../font/Folkard.svg#webfont') format('svg');
 }
 
+@font-face{ 
+	font-family: 'Papyrus-Custom';
+	src: url('../font/Papyrus-Regular.ttf') format('truetype');
+	
+	font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+}
+/*
+@font-face{
+	font-family: 'Papyrus-Custom';
+	src: url('../font/Papyrus-Bold.ttf') format('truetype');
+	
+	font-weigth: bold;
+}
+*/
+
 body {
-	font-family: Papyrus;
+	font-family: Papyrus, "Papyrus-Custom", "Folkard";
+/*	font-family:  "Papyrus-Regular"; */
 }
 
 /* --------------------- Common ionic style --------------------- */
@@ -95,6 +113,7 @@ body {
   margin: 0.4em 0.4em 0 0.4em;
 }
 .character {
+	font-family: "Folkard";
 	font-weight: bold;
 	text-align: left;
 	padding-left: 3rem;
