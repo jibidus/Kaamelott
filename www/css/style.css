@@ -1,3 +1,7 @@
+/*
+	For retina display, see http://weedygarden.net/2010/10/retina-display-and-css-background-images/
+*/
+
 /* --------------------- Fonts --------------------- */
 @font-face{ 
 	font-family: 'Folkard';
@@ -8,6 +12,7 @@
 	     url('../font/Folkard.svg#webfont') format('svg');
 }
 
+/* Papyrus in unknown by Android */
 @font-face{ 
 	font-family: 'Papyrus-Custom';
 	src: url('../font/Papyrus-Regular.ttf') format('truetype');
@@ -109,8 +114,9 @@ body {
 }
 */
 
-#dailySentence {
-  margin: 0.4em 0.4em 0 0.4em;
+#dailySentencesView {
+  	padding: 0.4em 0.4em 0 0.4em;
+	background-repeat: no-repeat;
 }
 .character {
 	font-family: "Folkard";
@@ -159,14 +165,16 @@ body {
 
 /* #### Desktops #### */
 @media screen and (min-width: 1024px){
-	.slider::before {   	  content: "Resolution > 1024 (Desktop)"; 	} 
+	.slider::before {   	  content: "1024 < Resolution (Desktop)"; 	} 
 	
 	body {
 		cursor: url('../img/finger.png'), auto;
 		font-size: 1.0rem;
 	}
-	#dailySentence {
-  		margin: 1em 1em 0 1em;
+	#dailySentencesView {
+  		padding: 1em 1em 0 1em;
+  		/* TODO gérer si la taille de l'écran est plus grande (centrer l'image et mettre une couleur de fond) */
+		background-image: url('../img/background/dailySentences/fond_2048.jpg');
 	}
 	.character {
 		font-size: 2rem;
@@ -183,12 +191,23 @@ body {
 	}
 }
 
+/* #### Tablets Portrait or Landscape #### */
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+	.slider::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
+	
+	#dailySentencesView {
+  		padding: 1em 1em 0 1em;
+		background-image: url('../img/background/dailySentences/fond_1024.jpg');
+	}
+}
+
 /* #### Tablets or landscape on mobile phone #### */
 @media screen and (max-width: 1024px){
-	.slider::before {   	  content: "Resolution < 1024"; 	} 
+	.slider::before {   	  content: "640 < Resolution < 1024 (mobile)"; 	} 
 	
-	#dailySentence {
-  		margin: 1em 1em 0 1em;
+	#dailySentencesView {
+  		padding: 1em 1em 0 1em;
+		background-image: url('../img/background/dailySentences/fond_1024.jpg');
 	}
 	.character {
 		font-size: 1.6rem;
@@ -208,8 +227,11 @@ body {
 
 /* #### Mobile Phones Portrait or Landscape #### */
 @media screen and (max-width: 640px){
-	.slider::before { content: "Resolution < 640"; 	}
+	.slider::before { content: "480 < Resolution< 640 (mobile)"; 	}
 	 
+	#dailySentencesView {
+		background-image: url('../img/background/dailySentences/fond_640.jpg');
+	}
 	.character {
 		font-size: 1.4rem;
 		padding-left: 1rem;
@@ -226,15 +248,13 @@ body {
 	
 }
 
-/* #### Mobile Phones Landscape #### */
-@media screen and (max-width: 640px) and (orientation: landscape){
-	.slider::before {   	  content: "Resolution < 640 and landscape"; 	} 
-}
-
 /* #### Mobile Phones Portrait #### */
-@media screen and (max-width: 480px) and (orientation: portrait){
-	.slider::before { content: "Resolution < 480 and portrait"; } 
+@media screen and (max-width: 480px) {
+	.slider::before { content: "Resolution < 480 (portrait)"; } 
 
+	#dailySentencesView {
+		background-image: url('../img/background/dailySentences/fond_480.jpg');
+	}
 }
 
 
@@ -255,11 +275,5 @@ body {
 		font-size: 0.7rem;
 		padding-top: 1rem;
 	}
-}
-
-/* #### Tablets Portrait or Landscape #### */
-@media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-	.slider::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
-	
 }
 
