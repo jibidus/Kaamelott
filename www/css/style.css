@@ -130,20 +130,18 @@ body {
  	border-color: black;
 }
 .character img {
-	background-repeat: no-repeat;
 	position: relative;
 	top: 1rem;
 	left: -1rem;
 	vertical-align: bottom;
 	margin-right: 0.5rem;
-
+	
+	background-repeat: no-repeat;
 	/* auto resize with container size */
 	-webkit-background-size: contain; /* For WebKit*/
     -moz-background-size: contain;    /* Mozilla*/
     -o-background-size: contain;      /* Opera*/
     background-size: contain;         /* Generic*/	
-    
-    border-image: 2px;	
 }
 .sentence {
 	line-height: 1.2rem;

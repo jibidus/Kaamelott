@@ -1,7 +1,8 @@
 
+
 @media screen and (min-width: 1024px){
 	.character img.Arthur {
-		background-image: url('../img/characters/Arthur_200.png');
+		content: url('../img/characters/Arthur_200.png');
 	}
 }
 
@@ -10,7 +11,7 @@
 	
 @media screen and (max-width: 1024px){
 	.character img.Arthur {
-		background-image: url('../img/characters/Arthur_100.png');
+		content: url('../img/characters/Arthur_100.png');
 	}
 }
 	
