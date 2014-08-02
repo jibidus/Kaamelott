@@ -1,0 +1,27 @@
+
+@media screen and (min-width: 1024px){
+	.character img.Arthur {
+		background-image: url('../img/characters/Arthur_200.png');
+	}
+}
+
+@media screen and (min-device-width: 768px) and (max-device-width: 1024px){
+}
+	
+@media screen and (max-width: 1024px){
+	.character img.Arthur {
+		background-image: url('../img/characters/Arthur_100.png');
+	}
+}
+	
+@media screen and (max-width: 640px){
+}
+	
+@media screen and (max-width: 480px) {
+}
+	
+@media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
+}
+
+
+

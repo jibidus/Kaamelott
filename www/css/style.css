@@ -130,11 +130,20 @@ body {
  	border-color: black;
 }
 .character img {
+	background-repeat: no-repeat;
 	position: relative;
 	top: 1rem;
 	left: -1rem;
 	vertical-align: bottom;
 	margin-right: 0.5rem;
+
+	/* auto resize with container size */
+	-webkit-background-size: contain; /* For WebKit*/
+    -moz-background-size: contain;    /* Mozilla*/
+    -o-background-size: contain;      /* Opera*/
+    background-size: contain;         /* Generic*/	
+    
+    border-image: 2px;	
 }
 .sentence {
 	line-height: 1.2rem;
@@ -186,10 +195,12 @@ body {
 		background-image: url('../img/background/dailySentences/fond_2048.jpg');
 	}
 	.character {
-		font-size: 2rem;
+		font-size: 2.3rem;
 	}	
 	.character img {
-		width: 6rem;
+		top: 2rem;
+		width: 10rem;
+    	height: 10rem;
 	}	
 	.sentence {
 		font-size: 1.6rem;
@@ -222,11 +233,12 @@ body {
 		font-size: 1.6rem;
 	}
 	.character img {
-		width: 5rem;
+		height: 7rem;
+		width: 7rem;
 	}
 	.sentence {
-		font-size: 1.4rem;
-		line-height: 1.8rem;
+		font-size: 1.6rem;
+		line-height: 1.9rem;
 	}
 	.reference {
 		font-size: 1.2rem;
@@ -245,9 +257,13 @@ body {
 		font-size: 1.4rem;
 		padding-left: 1rem;
 	}	
+	.character img {
+		height: 5rem;
+		width: 5rem;
+	}
 	.sentence {
-		font-size: 1.2rem;
-		line-height: 1.4rem;
+		font-size: 1.4rem;
+		line-height: 1.7rem;
 		padding-top: 1rem;
 	}
 	.reference {
