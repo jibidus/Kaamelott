@@ -8,6 +8,7 @@ angular.module('kaamelott.controllers', [])
 	$scope.sentences = [];
 	$scope.sentences.push(Sentences.get(currentSentenceIndex++));
 	$scope.sentences.push(Sentences.get(currentSentenceIndex++));
+	$scope.sentences.push(Sentences.get(currentSentenceIndex++));
 	$ionicSlideBoxDelegate.update();
 	
 	$scope.next = function() {
@@ -20,9 +21,18 @@ angular.module('kaamelott.controllers', [])
    $scope.onSlideChanged = function(newSlideIndex) {
 	   console.log("Silde index updated to " + newSlideIndex);
 	   $scope.slideIndex = newSlideIndex;
-	   if ($scope.sentences.length <= newSlideIndex + 1){
-		   appendOneSlide();
+	   
+	   while($scope.sentences.length < newSlideIndex + 3) {
+		   if ($scope.sentences.length >= nbSentences) {
+			   Sentences.shuffle();
+			   currentSentenceIndex = -1;
+			   // TODO will raise duplicate when inserting into sentences
+		   }
+		   $scope.sentences.push(Sentences.get(currentSentenceIndex++));
+		   console.log("1 sentence appened");
 	   }
+	   
+	   $ionicSlideBoxDelegate.update();
    };
    
    $scope.updateRate = function() {
@@ -31,17 +41,6 @@ angular.module('kaamelott.controllers', [])
    
    $scope.maxRate = function() {
 	   return [1, 2, 3, 4 ];
-   };
-   
-   function appendOneSlide() {
-	   if ($scope.sentences.length >= nbSentences) {
-		   Sentences.shuffle();
-		   currentSentenceIndex = -1;
-		   // TODO will raise duplicate when inserting into sentences
-	   }
-	   $scope.sentences.push(Sentences.get(currentSentenceIndex++));
-	   $ionicSlideBoxDelegate.update();
-	   console.log("1 sentence appened");
    };
    
 })
