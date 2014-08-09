@@ -278,6 +278,9 @@ body {
 	#dailySentencesView {
 		background-image: url('../img/background/dailySentences/fond_480.jpg');
 	}
+	.character img {
+		margin-right: -0.5rem;
+	}
 }
 
 
@@ -288,7 +291,7 @@ body {
 	.character {
 		font-size: 1.1rem;
 		padding-left: 1rem;
-	}	
+	}
 	.sentence {
 		font-size: 0.9rem;
 		line-height: 1.2rem;
