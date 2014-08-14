@@ -12,6 +12,7 @@ angular.module('kaamelott.controllers', [])
 		var nextSentence = Sentences.next(lastSentence);
 		$scope.sentences.push(nextSentence);
 	});
+	$scope.currentSlide = 0;
 //	$ionicSlideBoxDelegate.update();
 	
 	$scope.next = function() {
@@ -23,8 +24,9 @@ angular.module('kaamelott.controllers', [])
 	
 	$scope.onSlideChanged = function(newSlideIndex) {
 		console.log("----------- after slide changed");
-	   console.log("Want to go: " + (newSlideIndex+1) + " / " + $scope.sentences.length);
-	   console.log("Current slide: " + ($ionicSlideBoxDelegate.currentIndex()+1));
+	   console.log("Gone to: " + (newSlideIndex+1) + " / " + $scope.sentences.length);
+	   $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
+	   console.log("$scope.currentSlide=" + $scope.currentSlide);
 
 	   var nbPreviousSlidesOutOfBuffer = newSlideIndex+1 - bufferedSlides - 1;
 	   var nbNextSlidesOutOfBuffer = ($scope.sentences.length - (newSlideIndex+1)) - bufferedSlides;
@@ -35,16 +37,22 @@ angular.module('kaamelott.controllers', [])
 	   //console.log("Remove " + nbNextSlidesOutOfBuffer + " next slide(s)...");
 	   //removeNextSlides(nbNextSlidesOutOfBuffer);
 
-	   console.log("Current: " + ($ionicSlideBoxDelegate.currentIndex()+1) + " / " + $scope.sentences.length);
-	   $ionicSlideBoxDelegate.update();
+	   console.log("Now: " + ($ionicSlideBoxDelegate.currentIndex()+1) + " / " + $scope.sentences.length);
+	   if (nbPreviousSlidesOutOfBuffer != 0) {
+		   console.log("update()");
+		   $ionicSlideBoxDelegate.update();
+	   }
+	   console.log("$scope.currentSlide=" + $scope.currentSlide);
    };
    
    function removePreviousSlides(nbSlides){
+	   var jumpSlide = 0;
 	   if (nbSlides > 0) {
+		   // FIXME Use slice to avoid loop?
 		   repeat(nbSlides, function() {
 			   $scope.sentences.shift();
-			   $ionicSlideBoxDelegate.slide($ionicSlideBoxDelegate.currentIndex()--);
-			   $scope.slideIndex--;
+			   //$scope.slideIndex--;
+			   jumpSlide--;
 		   });
 	   } else {
 		   repeat(-nbSlides, function() {
@@ -52,12 +60,16 @@ angular.module('kaamelott.controllers', [])
 			   var previousSentence = Sentences.previous(firstSentence);
 			   if (previousSentence != null) {
 				   $scope.sentences.unshift(previousSentence);
-				   $ionicSlideBoxDelegate.slide($ionicSlideBoxDelegate.currentIndex()++);
+				   jumpSlide++;
 			   } else {
 				   // TODO Manage loop in service
 				   console.log("Cannot add previous slide: first slide reached");
 			   }
 		   });
+	   }
+	   if (jumpSlide != 0){
+		   $scope.currentSlide = $scope.currentSlide + jumpSlide;
+		 //  $ionicSlideBoxDelegate.slide($ionicSlideBoxDelegate.currentIndex() + jumpSlide, 0);
 	   }
    }
    
