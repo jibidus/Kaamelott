@@ -137,6 +137,22 @@ angular.module('kaamelott.services', [])
   	get: function(index) {
   		return allSentences[index];
   	},
+  	previous: function(sentence) {
+  		var index = allSentences.indexOf(sentence);
+  		if (index > 0) {
+  			return allSentences[index-1];
+  		} else {
+  	  		return null;
+  		}
+  	},
+  	next: function(sentence) {
+  		var index = allSentences.indexOf(sentence);
+  		if (index >= 0 && index < allSentences.length-1) {
+  			return allSentences[index+1];
+  		} else {
+  	  		return null;
+  		}
+  	},
   	size: function() {
   		return allSentences.length;
   	},
