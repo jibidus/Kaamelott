@@ -1,3 +1,7 @@
 .project
 ionic.cookies
 plugins/
+.buildpath
+platforms/
+.gitignore
+node_modules/
