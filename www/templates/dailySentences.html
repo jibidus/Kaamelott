@@ -17,7 +17,9 @@
             Suivant
 		</button>
 	</ion-nav-buttons>
-        
+	
+	<br />
+	
 	<ion-slide-box show-pager=false on-slide-changed="onSlideChanged(index)" active-slide="currentSlide">
 		<ion-slide ng-repeat="sentence in sentences">
 			<ion-content id="dailySentencesView" ng-if="$index >= currentSlide-1 && $index <= currentSlide+1">

@@ -33,6 +33,7 @@
 body {
 	font-family: Papyrus, "Papyrus-Custom", "Folkard";
 /*	font-family:  "Papyrus-Regular"; */
+	cursor: url('../img/finger.png'), auto;
 }
 
 /* --------------------- Common ionic style --------------------- */
@@ -45,11 +46,12 @@ body {
 body::before {   
   background: #ffc;   
   width: 300px;
-  left: 50%;   
+  height: 40px;
+  left: 50%;
   margin-left: -150px;
-  padding: 1em 2%;   
+  padding: 1em 2%;
   float: top;
-  clear: both;   
+  clear: both;
   content: "Defautl resolution";
   position: fixed;
   font-family: arial;
@@ -85,9 +87,11 @@ body::before {
 
 
 /* --------------------- Buttom buttons --------------------- */
+/*
 .bar {
 	background: none;
 }
+*/
 
 /* --------------------- Daily sentences --------------------- */
 /*
@@ -188,7 +192,6 @@ body::before {
 	body::before {   	  content: "1024 < Resolution (Desktop)"; 	} 
 	
 	body {
-		cursor: url('../img/finger.png'), auto;
 		font-size: 1.0rem;
 	}
 	#dailySentencesView {
