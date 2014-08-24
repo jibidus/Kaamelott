@@ -42,15 +42,19 @@ body {
 }
 
 /* For debug purpose */
-.slider::before {   
+body::before {   
   background: #ffc;   
-  width: 96%;   
+  width: 300px;
+  left: 50%;   
+  margin-left: -150px;
   padding: 1em 2%;   
-  float: top;   
+  float: top;
   clear: both;   
-  font-size: 14px;   
-  font-size: .875rem;      
-  content: "Defautl resolution"; 
+  content: "Defautl resolution";
+  position: fixed;
+  font-family: arial;
+  text-align: center;
+  z-index: 9;
 } 
   
 /*
@@ -181,7 +185,7 @@ body {
 
 /* #### Desktops #### */
 @media screen and (min-width: 1024px){
-	.slider::before {   	  content: "1024 < Resolution (Desktop)"; 	} 
+	body::before {   	  content: "1024 < Resolution (Desktop)"; 	} 
 	
 	body {
 		cursor: url('../img/finger.png'), auto;
@@ -211,7 +215,7 @@ body {
 
 /* #### Tablets Portrait or Landscape #### */
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
-	.slider::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
+	body::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
 	
 	#dailySentencesView {
   		padding: 1em 1em 0 1em;
@@ -221,7 +225,7 @@ body {
 
 /* #### Tablets or landscape on mobile phone #### */
 @media screen and (max-width: 1024px){
-	.slider::before {   	  content: "640 < Resolution < 1024 (mobile)"; 	} 
+	body::before {   	  content: "640 < Resolution < 1024 (mobile)"; 	} 
 	
 	#dailySentencesView {
   		padding: 1em 1em 0 1em;
@@ -246,7 +250,7 @@ body {
 
 /* #### Mobile Phones Portrait or Landscape #### */
 @media screen and (max-width: 640px){
-	.slider::before { content: "480 < Resolution< 640 (mobile)"; 	}
+	body::before { content: "480 < Resolution< 640 (mobile)"; 	}
 	 
 	#dailySentencesView {
 		background-image: url('../img/background/dailySentences/fond_640.jpg');
@@ -273,7 +277,7 @@ body {
 
 /* #### Mobile Phones Portrait #### */
 @media screen and (max-width: 480px) {
-	.slider::before { content: "Resolution < 480 (portrait)"; } 
+	body::before { content: "Resolution < 480 (portrait)"; } 
 
 	#dailySentencesView {
 		background-image: url('../img/background/dailySentences/fond_480.jpg');
@@ -286,7 +290,7 @@ body {
 
 /* #### iPhone 4+ Portrait or Landscape #### */
 @media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
-	.slider::before {   	  content: "Resolution < 480 on iPhone"; 	} 
+	body::before {   	  content: "Resolution < 480 on iPhone"; 	} 
 	
 	.character {
 		font-size: 1.1rem;
