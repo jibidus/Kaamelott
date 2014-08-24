@@ -1,50 +1,48 @@
 <ion-view>
 	 
-		<!-- 
     <ion-nav-bar class="nav-title-slide-ios7 bar-light">
         <ion-nav-back-button class="button-icon ion-arrow-left-c">
         </ion-nav-back-button>
     </ion-nav-bar>
     
-    	<ion-nav-buttons side="left">
-          <button class="button button-positive button-clear no-animation"
-                  ng-click="previous()" ng-if="slideIndex > 0">
-            Pr&#233;c&#233;dente citation
-          </button>
-        </ion-nav-buttons>
-        <ion-nav-buttons side="right">
-          <button class="button button-positive button-clear no-animation"
+   	<ion-nav-buttons side="left">
+		<button class="button button-positive button-clear no-animation"
+                 ng-click="previous()" ng-if="currentSlide > 0">
+           Pr&#233;c&#233;dent
+		</button>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<button class="button button-positive button-clear no-animation"
                   ng-click="next()">
-            Citation suivante
-          </button>
-        </ion-nav-buttons>
-        -->
-		<ion-slide-box show-pager=false on-slide-changed="onSlideChanged(index)" active-slide="currentSlide">
-			<ion-slide ng-repeat="sentence in sentences">
-				<ion-content id="dailySentencesView" ng-if="$index >= (currentSlide-1) && $index <= (currentSlide+1)">
-              	
-              	<div id="dailySentence">
-              	<img class="toto" />
-                  <p class="character"><img class="Arthur" /></img>{{sentence.character.name}}</p>
-                  <p class="sentence">{{sentence.text}}</p>
-                  <p class="reference">Livre <span class="book">{{sentence.episode.book}}</span>, épisode {{sentence.episode.number}} : <span class="episode">{{sentence.episode.title}}</span></p>
+            Suivant
+		</button>
+	</ion-nav-buttons>
+        
+	<ion-slide-box show-pager=false on-slide-changed="onSlideChanged(index)" active-slide="currentSlide">
+		<ion-slide ng-repeat="sentence in sentences">
+			<ion-content id="dailySentencesView" ng-if="$index >= currentSlide-1 && $index <= currentSlide+1">
+
+				<div id="dailySentence">
+					<p class="character"><img class="Arthur" />{{sentence.character.name}}</p>
+					<p class="sentence">{{sentence.text}}</p>
+					<p class="reference">Livre <span class="book">{{sentence.episode.book}}</span>, épisode {{sentence.episode.number}} : <span class="episode">{{sentence.episode.title}}</span></p>
 				</div>
-                  
+	                  
 				<div>
-				<!-- TODO Create directive (see rate.html) -->
-				<!-- 
-                  	<a class="button button-icon icon icon-rate selected" 
-                  		ng-repeat="rate in maxRate().slice(0, sentence.rate)" 
-                  		ng-click="updateRate(rate)"></a>
-                  	<a class="button button-icon icon icon-rate not-selected" 
-                  		ng-repeat="rate in maxRate().slice(sentence.rate)" 
-                  		ng-click="updateRate(rate)"></a>
-                  		 -->
+					<!-- TODO Create directive (see rate.html) -->
+					<!-- 
+	                  	<a class="button button-icon icon icon-rate selected" 
+	                  		ng-repeat="rate in maxRate().slice(0, sentence.rate)" 
+	                  		ng-click="updateRate(rate)"></a>
+	                  	<a class="button button-icon icon icon-rate not-selected" 
+	                  		ng-repeat="rate in maxRate().slice(sentence.rate)" 
+	                  		ng-click="updateRate(rate)"></a>
+	                  		 -->
 				</div>
 
-                </ion-content>
-			</ion-slide>
-		</ion-slide-box>
+			</ion-content>
+		</ion-slide>
+	</ion-slide-box>
 
 <!-- 
     <div class="bar bar-footer">
