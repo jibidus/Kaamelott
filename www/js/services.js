@@ -1,13 +1,8 @@
 angular.module('kaamelott.services', [])
 
-/**
- * A simple example service that returns some data.
- */
 .factory('Sentences', function($filter) {
   // Might use a resource here that returns a JSON array
 
-  // Some fake testing data
-	// TODO Put this in file as resource 
   var allSentences = [
 		{ text: 'Hé ben, si un jour j’oublie que je suis bonniche, vous serez gentils de me le rappeler !', character: { id: 'Angharad', name: 'Angharad'}, episode: {book: 'I', number: 37, title: 'La Romance de Lancelot'}},
 		{ text: 'Si Monsieur et Madame préfèrent s\'envoyer des fions dans l\'intimité, je peux aussi me retirer. ', character: { id: 'Angharad', name: 'Angharad'}, episode: {book: 'II', number: 37, title: 'La Joute Ancillaire'}},
