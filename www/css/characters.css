@@ -2,23 +2,31 @@
 
 @media screen and (min-width: 1024px){
 	.character img.Arthur {
-		content: url('../img/characters/Arthur_200.png');
+		content: url('../img/characters/Arthur_256.png');
 	}
 }
 
+/*
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
 }
+*/
 	
 @media screen and (max-width: 1024px){
 	.character img.Arthur {
-		content: url('../img/characters/Arthur_100.png');
+		content: url('../img/characters/Arthur_128.png');
 	}
 }
 	
 @media screen and (max-width: 640px){
+	.character img.Arthur {
+		content: url('../img/characters/Arthur_96.png');
+	}
 }
 	
 @media screen and (max-width: 480px) {
+	.character img.Arthur {
+		content: url('../img/characters/Arthur_64.png');
+	}
 }
 	
 @media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){

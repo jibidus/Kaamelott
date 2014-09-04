@@ -132,10 +132,6 @@ body::before {
 	font-weight: bold;
 	text-align: left;
 	padding-left: 3rem;
-	
-	border-width: 0px 0px 1px 0px;
-	border-style: solid;
- 	border-color: black;
 }
 .character img {
 	position: relative;
@@ -195,15 +191,16 @@ body::before {
 		font-size: 1.0rem;
 	}
 	#dailySentencesView {
-  		padding: 1em 1em 0 1em;
+  		padding: 0em 1em 0 1em;
   		/* TODO gérer si la taille de l'écran est plus grande (centrer l'image et mettre une couleur de fond) */
 		background-image: url('../img/background/dailySentences/fond_2048.jpg');
 	}
 	.character {
 		font-size: 2.3rem;
+		padding-bottom: 1rem;
 	}	
 	.character img {
-		top: 2rem;
+		top: 3.5rem;
 		width: 10rem;
     	height: 10rem;
 	}	
@@ -217,6 +214,7 @@ body::before {
 }
 
 /* #### Tablets Portrait or Landscape #### */
+/*
 @media screen and (min-device-width: 768px) and (max-device-width: 1024px){
 	body::before {   	  content: "768 < Resolution < 1024 (tablet)"; 	} 
 	
@@ -225,6 +223,7 @@ body::before {
 		background-image: url('../img/background/dailySentences/fond_1024.jpg');
 	}
 }
+*/
 
 /* #### Tablets or landscape on mobile phone #### */
 @media screen and (max-width: 1024px){
@@ -238,8 +237,7 @@ body::before {
 		font-size: 1.6rem;
 	}
 	.character img {
-		height: 7rem;
-		width: 7rem;
+		top: 2.4rem;
 	}
 	.sentence {
 		font-size: 1.6rem;
@@ -263,8 +261,8 @@ body::before {
 		padding-left: 1rem;
 	}	
 	.character img {
-		height: 5rem;
-		width: 5rem;
+		top: 1.8rem;
+		left: 0rem;
 	}
 	.sentence {
 		font-size: 1.4rem;
@@ -285,8 +283,12 @@ body::before {
 	#dailySentencesView {
 		background-image: url('../img/background/dailySentences/fond_480.jpg');
 	}
+	.character {
+		padding-top: 0.8rem;
+		padding-left: 0rem;
+	}
 	.character img {
-		margin-right: -0.5rem;
+		top: 1rem;
 	}
 }
 
