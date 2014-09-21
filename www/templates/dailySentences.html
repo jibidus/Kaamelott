@@ -25,7 +25,7 @@
 			<ion-content id="dailySentencesView" ng-if="$index >= currentSlide-1 && $index <= currentSlide+1">
 
 				<div id="dailySentence">
-					<p class="character"><img class="Arthur" />{{sentence.character.name}}</p>
+					<p class="character"><img class="{{sentence.character.id}}" />{{sentence.character.name}}</p>
 					<p class="sentence">{{sentence.text}}</p>
 					<p class="reference">Livre <span class="book">{{sentence.episode.book}}</span>, épisode {{sentence.episode.number}} : <span class="episode">{{sentence.episode.title}}</span></p>
 				</div>
