@@ -5,3 +5,4 @@ plugins/
 platforms/
 .gitignore
 node_modules/
+.tern-project

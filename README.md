@@ -1,8 +1,12 @@
 Kaamelott App
 =====================
 
-A starting project for Ionic that optionally supports
-using custom SCSS.
+This App is dedicated to Kaamelott TV serie. 
+Designed for all devices.
+
+
+## Live demo
+https://rawgit.com/jibidus/Kaamelott/master/www/index.html
 
 ## Using this project
 
@@ -42,5 +46,3 @@ the include to your `ionic.app.css` file which now contains all your Sass code a
 <link href="css/ionic.app.css" rel="stylesheet">
 -->
 ```
-## Live demo
-https://rawgit.com/jibidus/Kaamelott/master/www/index.html
