@@ -1,0 +1,34 @@
+# TODO
+* Javascript errors !!??
+* Character images : ajouter tous les perso (cf Avatars)
+* Créer script (grunt ?) pour générer characters.css
+* Unit tests !!
+* Add [authentication](http://ionicframework.com/blog/authentication-in-ionic/)
+* Faire site sur github + server BlueShift
+* Perf issue : css transition ?
+* externalize data on dedicated file (access throw $resource or $http)
+* Automate Splash creation with photoshop (le splash screen fonctionne, mais c'est la même image pour le mode paysage)
+* image de fond fixe -> modifier taille des img de fond (réduire height)
+* Icon : automatiser la génération des images
+* Add [icons for iOS](http://blog.abern.net/2014/05/setting-the-app-icon-and-splash-screen-using-ionic-framework/)
+* Font : trouver comment faire du bold avec le papyrus custom
+* Bug scrolling vertical (on ne peut pas voir le bas)
+* Splash screen : 
+    * ne fait pas tout l'écran
+    * paysage
+* Parcours citations :
+    * Historique session qui puisse être parcouru (only add is allowed)
+    * Historique client (10 dernières). Sert pour filtrer les prochaines
+
+# Improvements
+* Notation des citations -> base de donnée
+	* Empêcher de noter 2x la même citation
+	* Pouvoir retrouver sa propre notation
+* Suggestions de nouvelles citations
+* Test :
+* Test officiel avec classement (pas de paramétrage)
+* Test paramétrable (livre, auteur, nb de citations, notations minimum)
+
+# Infos
+http://objetdirect.developpez.com/tutoriels/css/responsive-design/
+Font alternative : Papyrus
