@@ -23,7 +23,6 @@
 	<ion-slide-box show-pager=false on-slide-changed="onSlideChanged(index)" active-slide="currentSlide">
 		<ion-slide ng-repeat="sentence in sentences">
 			<ion-content id="dailySentencesView" ng-if="$index >= currentSlide-1 && $index <= currentSlide+1">
-
 				<div id="dailySentence">
 					<p class="character"><img class="{{sentence.character.id}}" />{{sentence.character.name}}</p>
 					<p class="sentence">{{sentence.text}}</p>

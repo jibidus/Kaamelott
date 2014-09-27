@@ -1,7 +1,7 @@
 Kaamelott App
 =====================
 
-This App is dedicated to Kaamelott TV serie. 
+This App is dedicated to **Kaamelott**. It's aim is to play with all famous quotes of this TV serie.
 Designed for all devices.
 
 
@@ -13,36 +13,41 @@ https://rawgit.com/jibidus/Kaamelott/master/www/index.html
 You need the ionic utility:
 
 ```bash
-$ sudo npm install -g ionic
+$ sudo npm install -g cordova ionic gulp
 ```
 
 More info on this can be found on the Ionic [Getting Started](http://ionicframework.com/getting-started) page.
 
-## Installation
-
-While we recommend using the `ionic` utility to create new Ionic projects, you can use this repo as a barebones starting point to your next Ionic app.
-
-To use this project as is, first clone the repo from GitHub, then run:
+## Build
 
 ```bash
-$ cd ionic-app-base
-$ sudo npm install -g cordova ionic gulp
 $ npm install
-$ gulp init
+$ gulp
 ```
 
-## Using Sass (optional)
+Build iOS version (android is also available with android parameter)
 
-This project makes it easy to use Sass (the SCSS syntax) in your projects. This enables you to override styles from Ionic, and benefit from
-Sass's great features.
+```bash
+$ ionic platform add ios
+$ ionic build ios
+```
 
-Just update the `./scss/ionic.app.scss` file, and run `gulp` or `gulp watch` to rebuild the CSS files for Ionic.
+## Run
 
-Note: if you choose to use the Sass method, make sure to remove the included `ionic.css` file in `index.html`, and then uncomment
-the include to your `ionic.app.css` file which now contains all your Sass code and Ionic itself:
+Run as webapp
 
-```html
-<!-- IF using Sass (run gulp sass first), then remove the CSS include above
-<link href="css/ionic.app.css" rel="stylesheet">
--->
+``` bash
+$ ionic serve
+```
+
+Emulate for iOS
+
+``` bash
+$ ionic emulate ios
+```
+
+Run on a device through USB
+
+``` bash
+cordova run android
 ```
