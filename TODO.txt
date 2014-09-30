@@ -1,8 +1,6 @@
 # TODO
 * Perfs tests with crosswalk
 * Javascript errors !!??
-* Créer script (grunt ?) pour générer characters.css
-	* https://github.com/HugoGiraudel/SassyJSON
 * Add new image character
 	* dame_Cryda
 	* Appius_Manilius
@@ -15,7 +13,6 @@
 	* Cesar
 	* Breccan
 	* Angharad
-* Show default image when character image not found
 * Lorsqu'on génère la platform, les icons de l'appli sont écrasés. Créer un script qui règle le problème.
 * Unit tests !!
 * Add [authentication](http://ionicframework.com/blog/authentication-in-ionic/)
