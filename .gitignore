@@ -10,3 +10,4 @@ www/css/ionic.app.css
 www/css/ionic.app.min.css
 hooks/
 .brackets.json
+bower_components/
