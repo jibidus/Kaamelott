@@ -1,4 +1,5 @@
 # TODO
+* Perfs tests with crosswalk
 * Javascript errors !!??
 * Créer script (grunt ?) pour générer characters.css
 * Lorsqu'on génère la platform, les icons de l'appli sont écrasés. Créer un script qui règle le problème.
