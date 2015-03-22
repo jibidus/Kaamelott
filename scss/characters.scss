@@ -1,0 +1,53 @@
+$all_characters: Arthur Bohort Caius_Camillus Calogrenant Dagonet Dame_du_lac Demetra Duc_d_Aquitaine Elias Fee_Morgane Galessin Gauvain Ghetenoc Goustan Grudu Guenievre Herve_de_Rinel Interprete_burgonde Jacca Kadoc Karadoc Lancelot Leodagant Les_jumelles Maitre_d_Arme Meleagant Merlin Mevanwi Perceval Pere_Blaise Roi_Loth Roi_burgonde Seli Unknown Vennec Ygerne Yvain;
+
+
+@media screen and (min-width: 1024px){
+	.character img {
+		content: url('../img/characters/Unknown_256.png');
+	}
+
+	@each $character in $all_characters {
+		.character img.#{$character} {
+			content: url('../img/characters/#{$character}_256.png');
+		}
+	}
+}
+
+@media screen and (max-width: 1024px){
+	.character img {
+		content: url('../img/characters/Unknown_128.png');
+	}
+	@each $character in $all_characters {
+		.character img.#{$character} {
+			content: url('../img/characters/#{$character}_128.png');
+		}
+	}
+}
+	
+@media screen and (max-width: 640px){
+	.character img {
+		content: url('../img/characters/Unknown_96.png');
+	}
+	@each $character in $all_characters {
+		.character img.#{$character} {
+			content: url('../img/characters/#{$character}_96.png');
+		}
+	}
+}
+	
+@media screen and (max-width: 480px) {
+	.character img {
+		content: url('../img/characters/Unknown_64.png');
+	}
+	@each $character in $all_characters {
+		.character img.#{$character} {
+			content: url('../img/characters/#{$character}_64.png');
+		}
+	}
+}
+	
+@media screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2){
+}
+
+
+

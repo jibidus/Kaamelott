@@ -11,3 +11,6 @@ www/css/ionic.app.min.css
 hooks/
 .brackets.json
 bower_components/
+www/css/characters.min.css
+www/css/characters.css
+npm-debug.log

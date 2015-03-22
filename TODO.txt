@@ -1,7 +1,18 @@
 # TODO
 * Perfs tests with crosswalk
 * Javascript errors !!??
-* Créer script (grunt ?) pour générer characters.css
+* Add new image character
+	* dame_Cryda
+	* Appius_Manilius
+	* le_Jurisconsulte
+	* Manius_Macrinus_Firmus
+	* Lucius_Sillius_Sallustius
+	* Sefriane_d_Aquitaine
+	* Spurius_Cordius_Frontinius
+	* Verinas
+	* Cesar
+	* Breccan
+	* Angharad
 * Lorsqu'on génère la platform, les icons de l'appli sont écrasés. Créer un script qui règle le problème.
 * Unit tests !!
 * Add [authentication](http://ionicframework.com/blog/authentication-in-ionic/)
