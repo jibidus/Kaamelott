@@ -13,3 +13,4 @@ hooks/
 bower_components/
 www/css/characters.min.css
 www/css/characters.css
+npm-debug.log
