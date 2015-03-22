@@ -51,3 +51,8 @@ Run on a device through USB
 ``` bash
 cordova run android
 ```
+
+## Update Ionic version
+``` bash
+ionic lib update
+```
